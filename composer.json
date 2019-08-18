@@ -1,0 +1,38 @@
+{
+    "name": "tarantool/benchmarks",
+    "description": "Benchmarks for Tarantool PHP connectors.",
+    "keywords": ["tarantool", "nosql", "client", "connector", "benchmark", "performance", "async", "swoole"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eugene Leonovich",
+            "email": "gen.work@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "ext-json": "*",
+        "phpbench/phpbench": "^1.0@dev",
+        "rybakit/msgpack": "@dev",
+        "symfony/filesystem": "^4.3",
+        "tarantool/client": "@dev"
+    },
+    "suggest": {
+        "ext-msgpack": "For benchmarking Tarantool\\Client\\Packer\\PeclPacker",
+        "ext-tarantool": "For benchmarking the official PHP connector",
+        "ext-swoole": "For benchmarking in async mode",
+        "ext-async": "For benchmarking in async mode"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tarantool\\Benchmarks\\": ["src/", "benchmarks/"]
+        }
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "bootstrap": "../../vendor/autoload.php",
+    "path": "../",
+    "php_disable_ini": true,
+    "php_config": {
+        "zend_extension": ["opcache.so"],
+        "extension": ["async.so", "msgpack.so", "tarantool.so"],
+        "opcache.enable_cli": 1,
+        "pcre.jit": 1,
+        "async.tcp": 1
+    },
+    "extensions": ["\\Tarantool\\Benchmarks\\ExecutorExtension"],
+    "reports": {
+        "chart": {
+            "extends": "aggregate",
+            "cols": ["benchmark", "subject", "mean"],
+            "break": ["benchmark", "tag"]
+        },
+        "tag-table": {
+            "extends": "aggregate",
+            "break": ["benchmark", "tag"]
+        }
+    },
+    "outputs": {
+        "chart-image": {
+            "renderer": "quickchart"
+        }
+    },
+    "retry_threshold": 2
+}
+
