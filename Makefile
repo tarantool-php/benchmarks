@@ -19,7 +19,7 @@ $(clr_info)Targets:$(clr_reset)
     bench-sync-client-packers
         $(clr_comment)Benchmark client packers$(clr_reset)
 
-    bench-sync-client-binary-vs-sql
+    bench-sync-client-protocols
         $(clr_comment)Benchmark binary/SQL protocols$(clr_reset)
 
     bench-async
@@ -34,8 +34,8 @@ $(clr_info)Targets:$(clr_reset)
     bench-swoole-coroutines
         $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-swoole$(clr_comment) with different number of parallel coroutines$(clr_reset)
 
-    bench-async-vs-swoole
-        $(clr_comment)Benchmark async extensions$(clr_reset)
+    bench-async-extensions
+        $(clr_comment)Benchmark async/swoole extensions$(clr_reset)
 endef
 
 
@@ -88,18 +88,18 @@ bench-sync-client-packers: vendor
 		--file=reports/sync_client_packers__handler_packer_pure.xml \
 		--report=chart --output='extends: "chart-image", basename: "sync-client-packers"'
 
-.PHONY: bench-sync-client-binary-vs-sql
-bench-sync-client-binary-vs-sql: vendor
-	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync_client_binary_vs_sql__binary_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientSqlBench.php --dump-file=reports/sync_client_binary_vs_sql__sql_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
+.PHONY: bench-sync-client-protocols
+bench-sync-client-protocols: vendor
+	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync_client_protocols__binary_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
+	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientSqlBench.php --dump-file=reports/sync_client_protocols__sql_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
 	@vendor/bin/phpbench report \
-		--file=reports/sync_client_binary_vs_sql__binary_packer_pecl.xml \
-		--file=reports/sync_client_binary_vs_sql__sql_packer_pecl.xml \
+		--file=reports/sync_client_protocols__binary_packer_pecl.xml \
+		--file=reports/sync_client_protocols__sql_packer_pecl.xml \
 		--report=tag-table
 	@vendor/bin/phpbench report \
-		--file=reports/sync_client_binary_vs_sql__binary_packer_pecl.xml \
-		--file=reports/sync_client_binary_vs_sql__sql_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "sync-client-binary-vs-sql"'
+		--file=reports/sync_client_protocols__binary_packer_pecl.xml \
+		--file=reports/sync_client_protocols__sql_packer_pecl.xml \
+		--report=chart --output='extends: "chart-image", basename: "sync-client-protocols"'
 
 .PHONY: bench-async
 bench-async: vendor
@@ -174,15 +174,15 @@ bench-swoole-coroutines: vendor
 		--file=../../reports/swoole_coroutines__client_packer_pecl_co200.xml \
 		--report=chart --output='extends: "chart-image", basename: "swoole-coroutines"'
 
-.PHONY: bench-async-vs-swoole
-bench-async-vs-swoole: vendor
-	@cd benchmarks/Async && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_vs_swoole__async_client_packer_pecl.xml --tag=async
-	@cd benchmarks/Swoole && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_vs_swoole__swoole_client_packer_pecl.xml --tag=swoole
+.PHONY: bench-async-extensions
+bench-async-extensions: vendor
+	@cd benchmarks/Async && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_extensions__async_client_packer_pecl.xml --tag=async
+	@cd benchmarks/Swoole && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_extensions__swoole_client_packer_pecl.xml --tag=swoole
 	@vendor/bin/phpbench report \
-		--file=reports/async_vs_swoole__async_client_packer_pecl.xml \
-		--file=reports/async_vs_swoole__swoole_client_packer_pecl.xml \
+		--file=reports/async_extensions__async_client_packer_pecl.xml \
+		--file=reports/async_extensions__swoole_client_packer_pecl.xml \
 		--report=tag-table
 	@vendor/bin/phpbench report \
-		--file=reports/async_vs_swoole__async_client_packer_pecl.xml \
-		--file=reports/async_vs_swoole__swoole_client_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "async-vs-swoole"'
+		--file=reports/async_extensions__async_client_packer_pecl.xml \
+		--file=reports/async_extensions__swoole_client_packer_pecl.xml \
+		--report=chart --output='extends: "chart-image", basename: "async-extensions"'
