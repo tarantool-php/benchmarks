@@ -19,6 +19,9 @@ $(clr_info)Targets:$(clr_reset)
     bench-sync-client-packers
         $(clr_comment)Benchmark client packers$(clr_reset)
 
+    bench-sync-client-binary-vs-sql
+        $(clr_comment)Benchmark binary/SQL protocols$(clr_reset)
+
     bench-async
         $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-async$(clr_reset)
 
@@ -84,6 +87,19 @@ bench-sync-client-packers: vendor
 		--file=reports/sync_client_packers__handler_packer_pecl.xml \
 		--file=reports/sync_client_packers__handler_packer_pure.xml \
 		--report=chart --output='extends: "chart-image", basename: "sync-client-packers"'
+
+.PHONY: bench-sync-client-binary-vs-sql
+bench-sync-client-binary-vs-sql: vendor
+	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync_client_binary_vs_sql__binary_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
+	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientSqlBench.php --dump-file=reports/sync_client_binary_vs_sql__sql_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
+	@vendor/bin/phpbench report \
+		--file=reports/sync_client_binary_vs_sql__binary_packer_pecl.xml \
+		--file=reports/sync_client_binary_vs_sql__sql_packer_pecl.xml \
+		--report=tag-table
+	@vendor/bin/phpbench report \
+		--file=reports/sync_client_binary_vs_sql__binary_packer_pecl.xml \
+		--file=reports/sync_client_binary_vs_sql__sql_packer_pecl.xml \
+		--report=chart --output='extends: "chart-image", basename: "sync-client-binary-vs-sql"'
 
 .PHONY: bench-async
 bench-async: vendor

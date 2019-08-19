@@ -10,7 +10,7 @@ use Tarantool\Client\Client;
 /**
  * @BeforeMethods({"setUp"})
  * @Revs(10000)
- * @Iterations(3)
+ * @Iterations(5)
  * @OutputMode("throughput")
  * @OutputTimeUnit("seconds")
  * @Executor("template")
@@ -41,7 +41,7 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\CallRequest("math.min", [42, mt_rand(1, 99)]));',
+            '$response = $handler->handle(new \Tarantool\Client\Request\CallRequest("math.min", [42, mt_rand(1, 99)]));',
         ];
     }
 
@@ -52,7 +52,7 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\EvaluateRequest("return ...", [mt_rand()]));',
+            '$response = $handler->handle(new \Tarantool\Client\Request\EvaluateRequest("return ...", [mt_rand()]));',
         ];
     }
 
@@ -63,7 +63,7 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\SelectRequest(555, 0, [mt_rand(1, 100000)], 0, \PHP_INT_MAX & 0xffffffff, \Tarantool\Client\Schema\IteratorTypes::EQ));',
+            '$response = $handler->handle(new \Tarantool\Client\Request\SelectRequest(555, 0, [mt_rand(1, 100000)], 0, \PHP_INT_MAX & 0xffffffff, \Tarantool\Client\Schema\IteratorTypes::EQ));',
         ];
     }
 
@@ -85,7 +85,7 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\ReplaceRequest(555, [42, "foobar_".mt_rand()]));',
+            '$handler->handle(new \Tarantool\Client\Request\ReplaceRequest(555, [mt_rand(1, 100000), "a"]));',
         ];
     }
 
@@ -96,7 +96,7 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\UpdateRequest(555, 0, [42], [["=", 1, "foobar_".mt_rand()]]));',
+            '$handler->handle(new \Tarantool\Client\Request\UpdateRequest(555, 0, [mt_rand(1, 100000)], [["=", 1, "a"]]));',
         ];
     }
 
@@ -109,8 +109,8 @@ final class ClientHandlerBench
             self::generateHandler('handler'),
             '$handler->handle(new \Tarantool\Client\Request\UpsertRequest(
                 555, 
-                [42, "foobar_".mt_rand()], 
-                [["=", 1, "bazqux_".mt_rand()]]
+                [mt_rand(1, 100000), "a"], 
+                [["=", 1, "b"]]
             ));',
         ];
     }

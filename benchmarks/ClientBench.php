@@ -10,7 +10,7 @@ use Tarantool\Client\Client;
 /**
  * @BeforeMethods({"setUp"})
  * @Revs(10000)
- * @Iterations(3)
+ * @Iterations(5)
  * @OutputMode("throughput")
  * @OutputTimeUnit("seconds")
  * @Executor("template")
@@ -40,7 +40,7 @@ final class ClientBench
     {
         return [
             self::generateClient('client'),
-            '$client->call("math.min", 42, mt_rand(1, 99));',
+            '$result = $client->call("math.min", 42, mt_rand(1, 99));',
         ];
     }
 
@@ -51,7 +51,7 @@ final class ClientBench
     {
         return [
             self::generateClient('client'),
-            '$client->evaluate("return ...", mt_rand());',
+            '$result = $client->evaluate("return ...", mt_rand());',
         ];
     }
 
@@ -62,7 +62,7 @@ final class ClientBench
     {
         return [
             self::generateSpace('space', 555),
-            '$space->select(\Tarantool\Client\Schema\Criteria::key([mt_rand(1, 100000)]));',
+            '$result = $space->select(\Tarantool\Client\Schema\Criteria::key([mt_rand(1, 100000)]));',
         ];
     }
 
@@ -84,7 +84,7 @@ final class ClientBench
     {
         return [
             self::generateSpace('space', 555),
-            '$space->replace([42, "foobar_".mt_rand()]);',
+            '$space->replace([mt_rand(1, 100000), "a"]);',
         ];
     }
 
@@ -95,7 +95,7 @@ final class ClientBench
     {
         return [
             self::generateSpace('space', 555),
-            '$space->update([42], \Tarantool\Client\Schema\Operations::set(1, "foobar_".mt_rand()));',
+            '$space->update([mt_rand(1, 100000)], \Tarantool\Client\Schema\Operations::set(1, "a"));',
         ];
     }
 
@@ -106,7 +106,7 @@ final class ClientBench
     {
         return [
             self::generateSpace('space', 555),
-            '$space->upsert([42, "foobar_".mt_rand()], \Tarantool\Client\Schema\Operations::set(1, "bazqux_".mt_rand()));',
+            '$space->upsert([mt_rand(1, 100000), "a"], \Tarantool\Client\Schema\Operations::set(1, "b"));',
         ];
     }
 

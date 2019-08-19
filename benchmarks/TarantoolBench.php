@@ -9,7 +9,7 @@ use Tarantool\Benchmarks\CodeGenerator\Tarantool as TarantoolCodeGenerator;
 /**
  * @BeforeMethods({"setUp"})
  * @Revs(10000)
- * @Iterations(3)
+ * @Iterations(5)
  * @OutputMode("throughput")
  * @OutputTimeUnit("seconds")
  * @Executor("template")
@@ -38,7 +38,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->call("math.min", [42, mt_rand(1, 99)]);',
+            '$result = $client->call("math.min", [42, mt_rand(1, 99)]);',
         ];
     }
 
@@ -49,7 +49,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->evaluate("return ...", [mt_rand()]);',
+            '$result = $client->evaluate("return ...", [mt_rand()]);',
         ];
     }
 
@@ -60,7 +60,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->select(555, [mt_rand(1, 100000)]);',
+            '$result = $client->select(555, [mt_rand(1, 100000)]);',
         ];
     }
 
@@ -82,7 +82,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->replace(555, [42, "foobar_".mt_rand()]);',
+            '$client->replace(555, [mt_rand(1, 100000), "a"]);',
         ];
     }
 
@@ -93,7 +93,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->update(555, [42], [["field" => 1, "op" => "=", "arg" => "foobar_".mt_rand()]]);',
+            '$client->update(555, [mt_rand(1, 100000)], [["field" => 1, "op" => "=", "arg" => "a"]]);',
         ];
     }
 
@@ -104,7 +104,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->upsert(555, [42, "foobar_".mt_rand()], [["field" => 1, "op" => "=", "arg" => "bazqux_".mt_rand()]]);',
+            '$client->upsert(555, [mt_rand(1, 100000), "a"], [["field" => 1, "op" => "=", "arg" => "b"]]);',
         ];
     }
 
