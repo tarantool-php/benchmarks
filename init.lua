@@ -21,7 +21,7 @@ function create_fixtures()
     end
 
     space = box.schema.space.create(space_name, {id = 555, temporary = true})
-    space:create_index('primary', {type = 'hash', parts = {1, 'unsigned'}, sequence = true})
+    space:create_index('primary', {type = 'tree', parts = {1, 'unsigned'}, sequence = true})
     space:format({{name = 'id', type = 'integer'}, {name = 'name', type = 'string', is_nullable = false}})
 
     for i = 1, 100000 do
