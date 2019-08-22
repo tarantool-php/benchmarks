@@ -13,6 +13,9 @@ $(clr_info)Targets:$(clr_reset)
     clean
         $(clr_comment)Remove previously generated reports (if any)$(clr_reset)
 
+    bench-all
+        $(clr_comment)Run all benchmarks$(clr_reset)
+
     bench-sync
         $(clr_comment)Benchmark connectors in sync mode$(clr_reset)
 
@@ -52,6 +55,17 @@ vendor: reports
 .PHONY: clean
 clean:
 	@find reports -type f -not -name '_*' -delete
+
+.PHONY: bench-all
+bench-all: \
+	bench-sync \
+	bench-sync-client-packers \
+	bench-sync-client-protocols \
+	bench-async \
+	bench-async-coroutines \
+	bench-swoole \
+	bench-swoole-coroutines \
+	bench-async-extensions
 
 .PHONY: bench-sync
 bench-sync: vendor

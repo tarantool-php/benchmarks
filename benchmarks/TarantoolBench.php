@@ -17,7 +17,7 @@ use Tarantool\Benchmarks\CodeGenerator\Tarantool as TarantoolCodeGenerator;
 final class TarantoolBench {
     public function setUp() : void
     {
-        (new \Tarantool())->call('create_fixtures');
+        (new \Tarantool())->call('create_fixtures', [Config::all()]);
     }
 
     /**
@@ -60,7 +60,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$result = $client->select(555, [mt_rand(1, 100000)]);',
+            sprintf('$result = $client->select(%d, [mt_rand(1, %d)]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -71,7 +71,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->insert(555, [null, "foobar_".mt_rand()]);',
+            sprintf('$client->insert(%d, [null, "foobar_".mt_rand()]);', Config::SPACE_ID),
         ];
     }
 
@@ -82,7 +82,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->replace(555, [mt_rand(1, 100000), "a"]);',
+            sprintf('$client->replace(%d, [mt_rand(1, %d), "a"]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -93,7 +93,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->update(555, [mt_rand(1, 100000)], [["field" => 1, "op" => "=", "arg" => "a"]]);',
+            sprintf('$client->update(%d, [mt_rand(1, %d)], [["field" => 1, "op" => "=", "arg" => "a"]]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -104,7 +104,7 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->upsert(555, [mt_rand(1, 100000), "a"], [["field" => 1, "op" => "=", "arg" => "b"]]);',
+            sprintf('$client->upsert(%d, [mt_rand(1, %d), "a"], [["field" => 1, "op" => "=", "arg" => "b"]]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -115,13 +115,13 @@ final class TarantoolBench {
     {
         return [
             self::generateClient('client'),
-            '$client->delete(555, [mt_rand(1, 100000)]);',
+            sprintf('$client->delete(%d, [mt_rand(1, %d)]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
 
-    private static function generateClient(string $instanceName) : string
+    private static function generateClient(string $variableName) : string
     {
-        return TarantoolCodeGenerator::generateClient($instanceName);
+        return TarantoolCodeGenerator::generateClient($variableName);
     }
 }

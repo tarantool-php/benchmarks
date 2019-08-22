@@ -19,7 +19,7 @@ final class ClientHandlerBench
 {
     public function setUp() : void
     {
-        Client::fromDefaults()->call('create_fixtures');
+        Client::fromDefaults()->call('create_fixtures', Config::all());
     }
 
     /**
@@ -63,7 +63,9 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$response = $handler->handle(new \Tarantool\Client\Request\SelectRequest(555, 0, [mt_rand(1, 100000)], 0, \PHP_INT_MAX & 0xffffffff, \Tarantool\Client\Schema\IteratorTypes::EQ));',
+            sprintf('$response = $handler->handle(
+                new \Tarantool\Client\Request\SelectRequest(%d, 0, [mt_rand(1, %d)], 0, \PHP_INT_MAX & 0xffffffff, \Tarantool\Client\Schema\IteratorTypes::EQ)
+            );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -74,7 +76,9 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\InsertRequest(555, [null, "foobar_".mt_rand()]));',
+            sprintf('$handler->handle(
+                new \Tarantool\Client\Request\InsertRequest(%d, [null, "foobar_".mt_rand()])
+            );', Config::SPACE_ID),
         ];
     }
 
@@ -85,7 +89,9 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\ReplaceRequest(555, [mt_rand(1, 100000), "a"]));',
+            sprintf('$handler->handle(
+                new \Tarantool\Client\Request\ReplaceRequest(%d, [mt_rand(1, %d), "a"])
+            );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -96,7 +102,9 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\UpdateRequest(555, 0, [mt_rand(1, 100000)], [["=", 1, "a"]]));',
+            sprintf('$handler->handle(
+                new \Tarantool\Client\Request\UpdateRequest(%d, 0, [mt_rand(1, %d)], [["=", 1, "a"]])
+            );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -107,11 +115,9 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\UpsertRequest(
-                555, 
-                [mt_rand(1, 100000), "a"], 
-                [["=", 1, "b"]]
-            ));',
+            sprintf('$handler->handle(
+                new \Tarantool\Client\Request\UpsertRequest(%d, [mt_rand(1, %d), "a"], [["=", 1, "b"]])
+            );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -122,14 +128,16 @@ final class ClientHandlerBench
     {
         return [
             self::generateHandler('handler'),
-            '$handler->handle(new \Tarantool\Client\Request\DeleteRequest(555, 0, [mt_rand(1, 100000)]));',
+            sprintf('$handler->handle(
+                new \Tarantool\Client\Request\DeleteRequest(%d, 0, [mt_rand(1, %d)])
+            );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
-    private static function generateHandler(string $instanceName) : string
+    private static function generateHandler(string $variableName) : string
     {
         return ClientCodeGenerator::generateHandler(
-            $instanceName,
+            $variableName,
             $_SERVER['TNT_BENCH_PACKER_TYPE'] ?? ClientCodeGenerator::PACKER_TYPE_PURE
         );
     }

@@ -14,14 +14,14 @@ final class Client
         return sprintf('$%s = %s;', $instanceName, self::generateClientRaw($packerType));
     }
 
-    public static function generateSpace(string $instanceName, int $spaceId, string $packerType = self::PACKER_TYPE_PURE) : string
+    public static function generateSpace(string $variableName, int $spaceId, string $packerType = self::PACKER_TYPE_PURE) : string
     {
-        return sprintf('$%s = (%s)->getSpaceById(%d);', $instanceName, self::generateClientRaw($packerType), $spaceId);
+        return sprintf('$%s = (%s)->getSpaceById(%d);', $variableName, self::generateClientRaw($packerType), $spaceId);
     }
 
-    public static function generateHandler(string $instanceName, string $packerType = self::PACKER_TYPE_PURE) : string
+    public static function generateHandler(string $variableName, string $packerType = self::PACKER_TYPE_PURE) : string
     {
-        return sprintf('$%s = %s;', $instanceName, self::generateHandlerRaw($packerType));
+        return sprintf('$%s = %s;', $variableName, self::generateHandlerRaw($packerType));
     }
 
     private static function generateClientRaw(string $packerType) : string

@@ -12,19 +12,21 @@ box.cfg {
 box.schema.user.grant('guest', 'read,write,execute,create,drop,alter', 'universe', nil, {if_not_exists = true})
 
 
-function create_fixtures()
-    local space_name = 'items'
+function create_fixtures(config)
     local space
 
-    if box.space[space_name] then
-        box.space[space_name]:drop()
+    if box.space[config.space_name] then
+        box.space[config.space_name]:drop()
     end
 
-    space = box.schema.space.create(space_name, {id = 555, temporary = true})
+    space = box.schema.space.create(config.space_name, {id = config.space_id, temporary = true})
     space:create_index('primary', {type = 'tree', parts = {1, 'unsigned'}, sequence = true})
     space:format({{name = 'id', type = 'integer'}, {name = 'name', type = 'string', is_nullable = false}})
 
-    for i = 1, 100000 do
+    for i = 1, config.row_count do
         space:replace{i, 'tuple_' .. i}
     end
+
+    --box.execute([[DROP TABLE IF EXISTS items_sql;]]);
+    --box.execute([[CREATE TABLE items_sql (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20));]]);
 end

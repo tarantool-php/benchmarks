@@ -19,7 +19,7 @@ final class ClientBench
 {
     public function setUp() : void
     {
-        Client::fromDefaults()->call('create_fixtures');
+        Client::fromDefaults()->call('create_fixtures', Config::all());
     }
 
     /**
@@ -61,8 +61,8 @@ final class ClientBench
     public function select() : array
     {
         return [
-            self::generateSpace('space', 555),
-            '$result = $space->select(\Tarantool\Client\Schema\Criteria::key([mt_rand(1, 100000)]));',
+            self::generateSpace('space', Config::SPACE_ID),
+            sprintf('$result = $space->select(\Tarantool\Client\Schema\Criteria::key([mt_rand(1, %d)]));', Config::ROW_COUNT),
         ];
     }
 
@@ -72,7 +72,7 @@ final class ClientBench
     public function insert() : array
     {
         return [
-            self::generateSpace('space', 555),
+            self::generateSpace('space', Config::SPACE_ID),
             '$space->insert([null, "foobar_".mt_rand()]);',
         ];
     }
@@ -83,8 +83,8 @@ final class ClientBench
     public function replace() : array
     {
         return [
-            self::generateSpace('space', 555),
-            '$space->replace([mt_rand(1, 100000), "a"]);',
+            self::generateSpace('space', Config::SPACE_ID),
+            sprintf('$space->replace([mt_rand(1, %d), "a"]);', Config::ROW_COUNT),
         ];
     }
 
@@ -94,8 +94,8 @@ final class ClientBench
     public function update() : array
     {
         return [
-            self::generateSpace('space', 555),
-            '$space->update([mt_rand(1, 100000)], \Tarantool\Client\Schema\Operations::set(1, "a"));',
+            self::generateSpace('space', Config::SPACE_ID),
+            sprintf('$space->update([mt_rand(1, %d)], \Tarantool\Client\Schema\Operations::set(1, "a"));', Config::ROW_COUNT),
         ];
     }
 
@@ -105,8 +105,8 @@ final class ClientBench
     public function upsert() : array
     {
         return [
-            self::generateSpace('space', 555),
-            '$space->upsert([mt_rand(1, 100000), "a"], \Tarantool\Client\Schema\Operations::set(1, "b"));',
+            self::generateSpace('space', Config::SPACE_ID),
+            sprintf('$space->upsert([mt_rand(1, %d), "a"], \Tarantool\Client\Schema\Operations::set(1, "b"));', Config::ROW_COUNT),
         ];
     }
 
@@ -116,23 +116,23 @@ final class ClientBench
     public function delete() : array
     {
         return [
-            self::generateSpace('space', 555),
-            '$space->delete([mt_rand(1, 100000)]);',
+            self::generateSpace('space', Config::SPACE_ID),
+            sprintf('$space->delete([mt_rand(1, %d)]);', Config::ROW_COUNT),
         ];
     }
 
-    private static function generateClient(string $instanceName) : string
+    private static function generateClient(string $variableName) : string
     {
         return ClientCodeGenerator::generateClient(
-            $instanceName,
+            $variableName,
             $_SERVER['TNT_BENCH_PACKER_TYPE'] ?? ClientCodeGenerator::PACKER_TYPE_PURE
         );
     }
 
-    private static function generateSpace(string $instanceName, int $spaceId) : string
+    private static function generateSpace(string $variableName, int $spaceId) : string
     {
         return ClientCodeGenerator::generateSpace(
-            $instanceName,
+            $variableName,
             $spaceId,
             $_SERVER['TNT_BENCH_PACKER_TYPE'] ?? ClientCodeGenerator::PACKER_TYPE_PURE
         );

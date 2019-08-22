@@ -19,7 +19,7 @@ final class ClientSqlBench
 {
     public function setUp() : void
     {
-        Client::fromDefaults()->call('create_fixtures');
+        Client::fromDefaults()->call('create_fixtures', Config::all());
     }
 
     /**
@@ -40,7 +40,7 @@ final class ClientSqlBench
     {
         return [
             self::generateClient('client'),
-            '$result = $client->executeQuery("SELECT * FROM \"items\" WHERE \"id\" = ?", mt_rand(1, 100000));',
+            sprintf('$result = $client->executeQuery("SELECT * FROM \"%s\" WHERE \"id\" = ?", mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
         ];
     }
 
@@ -51,7 +51,7 @@ final class ClientSqlBench
     {
         return [
             self::generateClient('client'),
-            '$client->executeUpdate("INSERT INTO \"items\" VALUES (null, ?)", "foobar_".mt_rand());',
+            sprintf('$client->executeUpdate("INSERT INTO \"%s\" VALUES (null, ?)", "foobar_".mt_rand());', Config::SPACE_NAME),
         ];
     }
 
@@ -62,7 +62,7 @@ final class ClientSqlBench
     {
         return [
             self::generateClient('client'),
-            '$client->executeUpdate("UPDATE \"items\" SET \"name\" = ? WHERE \"id\" = ?", "", mt_rand(1, 100000));',
+            sprintf('$client->executeUpdate("UPDATE \"%s\" SET \"name\" = ? WHERE \"id\" = ?", "", mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
         ];
     }
 
@@ -73,14 +73,14 @@ final class ClientSqlBench
     {
         return [
             self::generateClient('client'),
-            '$client->executeUpdate("DELETE FROM \"items\" WHERE \"id\" = ?", mt_rand(1, 100000));',
+            sprintf('$client->executeUpdate("DELETE FROM \"%s\" WHERE \"id\" = ?", mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
         ];
     }
 
-    private static function generateClient(string $instanceName) : string
+    private static function generateClient(string $variableName) : string
     {
         return ClientCodeGenerator::generateClient(
-            $instanceName,
+            $variableName,
             $_SERVER['TNT_BENCH_PACKER_TYPE'] ?? ClientCodeGenerator::PACKER_TYPE_PURE
         );
     }
