@@ -11,7 +11,6 @@ box.cfg {
 
 box.schema.user.grant('guest', 'read,write,execute,create,drop,alter', 'universe', nil, {if_not_exists = true})
 
-
 function create_fixtures(config)
     local space
 
@@ -26,7 +25,4 @@ function create_fixtures(config)
     for i = 1, config.row_count do
         space:replace{i, 'tuple_' .. i}
     end
-
-    --box.execute([[DROP TABLE IF EXISTS items_sql;]]);
-    --box.execute([[CREATE TABLE items_sql (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20));]]);
 end
