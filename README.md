@@ -13,12 +13,13 @@
 
 ## Usage
 
-First, make user you have your Tarantool server running [bench.lua](bench.lua) on localhost on port `3301`.
+First, make user you have your Tarantool server running [bench.lua](bench.lua) on `localhost` on port `3301`.
 
-> If you want to run it on Docker execute:
+> If you want to run it on Docker, execute:
 >
 > ```bash
-> docker run -d --network host --name=tarantool-bench -v $PWD/bench.lua:/bench.lua tarantool/tarantool:2 tarantool /bench.lua
+> docker run -d --network host --name=tarantool-bench \
+>    -v $PWD/bench.lua:/bench.lua tarantool/tarantool:2 tarantool /bench.lua
 > ```
 
 Then run
@@ -45,6 +46,21 @@ The below results were made running benchmarks on Apple MacBook Pro (2015) on th
  * ext-swoole 4.4.0-beta
  * ext-parallel 1.1.4-dev
  * ext-tarantool 0.3.2 with the [patch](https://github.com/tarantool/tarantool-php/pull/148/files) 
+
+#### bench-sync
+#### bench-sync-client-packers
+#### bench-sync-client-protocols
+#### bench-async
+#### bench-async-coroutines
+#### bench-async-client-protocols
+#### bench-swoole
+#### bench-swoole-coroutines
+#### bench-swoole-client-protocols
+#### bench-parallel
+#### bench-parallel-threads
+#### bench-parallel-client-protocols
+#### bench-extensions
+#### bench-parallel-with-async
 
 
 ## License
