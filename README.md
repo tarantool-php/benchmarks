@@ -7,8 +7,8 @@
  * [Tarantool](https://www.tarantool.io/) 1.7.1+
  * [ext-msgpack](https://github.com/msgpack/msgpack-php) to benchmark the msgpack pecl extension
  * [ext-async](https://github.com/dreamsxin/ext-async) to benchmark connectors in async mode
- * [ext-swoole]([https://github.com/swoole/swoole-src) to benchmark connectors in async mode
- * [ext-tarantool]([https://github.com/tarantool/tarantool-php) to benchmark the official PHP connector
+ * [ext-swoole](https://github.com/swoole/swoole-src) to benchmark connectors in async mode
+ * [ext-tarantool](https://github.com/tarantool/tarantool-php) to benchmark the official PHP connector
 
 
 ## Usage
