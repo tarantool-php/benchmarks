@@ -171,8 +171,8 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
 
         (new Filesystem())->dumpFile($filename, file_get_contents($url));
 
-        $this->output->writeln("Url: <comment>$url</comment>.");
-        $this->output->writeln("File saved to <comment>$filename</comment>.");
+        $this->output->writeln("Url: <comment>$url</comment>");
+        $this->output->writeln("File saved to <comment>$filename</comment>");
     }
 
     private static function resolveImageName(Config $config) : string

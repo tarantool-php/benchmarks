@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace Tarantool\Benchmarks;
 
 use Tarantool\Benchmarks\CodeGenerator\Client as ClientCodeGenerator;
-use Tarantool\Client\Client;
 
 /**
- * @BeforeMethods({"setUp"})
  * @Revs(10000)
  * @Iterations(5)
+ * @Sleep(1000000)
  * @OutputMode("throughput")
  * @OutputTimeUnit("seconds")
  * @Executor("template")
  */
 final class ClientHandlerBench
 {
-    public function setUp() : void
-    {
-        Client::fromDefaults()->call('create_fixtures', Config::all());
-    }
+    use Fixtures;
 
     /**
      * @Subject
@@ -61,6 +57,8 @@ final class ClientHandlerBench
      */
     public function select() : array
     {
+        $this->loadFixtures();
+
         return [
             self::generateHandler('handler'),
             sprintf('$response = $handler->handle(
@@ -74,6 +72,8 @@ final class ClientHandlerBench
      */
     public function insert() : array
     {
+        $this->resetSchema();
+
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
@@ -87,6 +87,8 @@ final class ClientHandlerBench
      */
     public function replace() : array
     {
+        $this->loadFixtures();
+
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
@@ -100,6 +102,8 @@ final class ClientHandlerBench
      */
     public function update() : array
     {
+        $this->loadFixtures();
+
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
@@ -113,6 +117,8 @@ final class ClientHandlerBench
      */
     public function upsert() : array
     {
+        $this->loadFixtures();
+
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
@@ -126,6 +132,8 @@ final class ClientHandlerBench
      */
     public function delete() : array
     {
+        $this->loadFixtures();
+
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
@@ -138,7 +146,7 @@ final class ClientHandlerBench
     {
         return ClientCodeGenerator::generateHandler(
             $variableName,
-            $_SERVER['TNT_BENCH_PACKER_TYPE'] ?? ClientCodeGenerator::PACKER_TYPE_PURE
+            $_SERVER['TNT_BENCH_PACKER_TYPE']
         );
     }
 }

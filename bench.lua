@@ -11,7 +11,7 @@ box.cfg {
 
 box.schema.user.grant('guest', 'read,write,execute,create,drop,alter', 'universe', nil, {if_not_exists = true})
 
-function create_fixtures(config)
+function create_space(config)
     local space
 
     if box.space[config.space_name] then
@@ -20,7 +20,13 @@ function create_fixtures(config)
 
     space = box.schema.space.create(config.space_name, {id = config.space_id, temporary = true})
     space:create_index('primary', {type = 'tree', parts = {1, 'unsigned'}, sequence = true})
-    space:format({{name = 'id', type = 'integer'}, {name = 'name', type = 'string', is_nullable = false}})
+    space:format({{name = 'id', type = 'unsigned'}, {name = 'name', type = 'string', is_nullable = false}})
+
+    return space
+end
+
+function load_fixtures(config)
+    local space = create_space(config)
 
     for i = 1, config.row_count do
         space:replace{i, 'tuple_' .. i}
