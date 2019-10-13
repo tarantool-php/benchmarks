@@ -13,7 +13,7 @@
 
 ## Usage
 
-First, make user you have your Tarantool server running [bench.lua](bench.lua) on `localhost` on port `3301`.
+First, make sure you have the [bench.lua](bench.lua) instance running and listening on `localhost` on port `3301`.
 
 > If you want to run it on Docker, execute:
 >
