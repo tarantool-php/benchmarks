@@ -96,16 +96,13 @@ bench-all: \
 bench-sync: vendor
 	@vendor/bin/phpbench run benchmarks/TarantoolBench.php --dump-file=reports/sync__tarantool.xml
 	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync__client_packer_pecl.xml
-	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientHandlerBench.php --dump-file=reports/sync__client_handler_packer_pecl.xml
 	@vendor/bin/phpbench report \
 		--file=reports/sync__tarantool.xml \
 		--file=reports/sync__client_packer_pecl.xml \
-		--file=reports/sync__client_handler_packer_pecl.xml \
 		--report=tag-table
 	@vendor/bin/phpbench report \
 		--file=reports/sync__tarantool.xml \
 		--file=reports/sync__client_packer_pecl.xml \
-		--file=reports/sync__client_handler_packer_pecl.xml \
 		--report=chart --output='extends: "chart-image", basename: "sync"'
 
 .PHONY: bench-sync-client-packers
