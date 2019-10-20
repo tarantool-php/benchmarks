@@ -20,6 +20,7 @@ final class ClientSqlBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function ping() : array
     {
@@ -31,6 +32,7 @@ final class ClientSqlBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function select() : array
     {
@@ -44,6 +46,7 @@ final class ClientSqlBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function insert() : array
     {
@@ -57,6 +60,7 @@ final class ClientSqlBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function update() : array
     {
@@ -70,6 +74,7 @@ final class ClientSqlBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function delete() : array
     {
@@ -85,7 +90,7 @@ final class ClientSqlBench
     {
         return ClientCodeGenerator::generateClient(
             $variableName,
-            $_SERVER['TNT_BENCH_PACKER_TYPE']
+            $_SERVER['TNT_BENCH_PACKER']
         );
     }
 }

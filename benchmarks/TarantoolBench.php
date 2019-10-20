@@ -20,6 +20,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function ping() : array
     {
@@ -31,6 +32,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function call() : array
     {
@@ -42,6 +44,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function evaluate() : array
     {
@@ -53,6 +56,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function select() : array
     {
@@ -66,6 +70,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function insert() : array
     {
@@ -79,6 +84,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function replace() : array
     {
@@ -92,6 +98,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function update() : array
     {
@@ -105,6 +112,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function upsert() : array
     {
@@ -118,6 +126,7 @@ final class TarantoolBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function delete() : array
     {

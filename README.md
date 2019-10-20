@@ -2,11 +2,11 @@
 
 # Requirements
 
- * PHP 7.1+
+ * PHP 7.1+ (NTS and ZTS)
  * [Composer](https://getcomposer.org/)
  * [Tarantool](https://www.tarantool.io/) 1.7.1+
  * [ext-msgpack](https://github.com/msgpack/msgpack-php) to benchmark the msgpack pecl extension
- * [ext-async](https://github.com/dreamsxin/ext-async) to benchmark connectors in async mode
+ * ext-async ([fork](https://github.com/dreamsxin/ext-async)) to benchmark connectors in async mode
  * [ext-swoole](https://github.com/swoole/swoole-src) to benchmark connectors in async mode
  * [ext-tarantool](https://github.com/tarantool/tarantool-php) to benchmark the official PHP connector
 
@@ -28,7 +28,23 @@ Then run
 make
 ```
 
-to see the usage text and a list of all available benchmarks.
+to see the usage text and a list of all available benchmarks. For example, to (re)run all benchmarks, execute
+
+```bash
+make clean bench-all
+```
+
+You may change default benchmark settings by defining the following environment variables:
+
+* `TNT_BENCH_ITERATIONS`
+* `TNT_BENCH_REVOLUTIONS`
+* `TNT_BENCH_RETRY_THRESHOLD`
+
+For example:
+
+```bash
+make clean bench-all TNT_BENCH_REVOLUTIONS=20000 TNT_BENCH_RETRY_THRESHOLD=5 
+```
 
 
 ## Results
@@ -43,24 +59,23 @@ The below results were made running benchmarks on Apple MacBook Pro (2015) on th
  * tarantool/client 0.6.0-dev-61c7328
  * ext-msgpack 2.0.3
  * ext-async 0.3.0
- * ext-swoole 4.4.0-beta
+ * ext-swoole 4.4.7
  * ext-parallel 1.1.4-dev
  * ext-tarantool 0.3.2 with the [patch](https://github.com/tarantool/tarantool-php/pull/148/files) 
 
-#### bench-sync
+#### bench-sync-connectors
 #### bench-sync-client-packers
 #### bench-sync-client-protocols
-#### bench-async
 #### bench-async-coroutines
+#### bench-async-connectors
 #### bench-async-client-protocols
-#### bench-swoole
 #### bench-swoole-coroutines
+#### bench-swoole-connectors
 #### bench-swoole-client-protocols
-#### bench-parallel
 #### bench-parallel-threads
+#### bench-parallel-connectors
 #### bench-parallel-client-protocols
 #### bench-extensions
-#### bench-parallel-with-async
 
 
 ## License

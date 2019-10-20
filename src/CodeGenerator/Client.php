@@ -6,20 +6,20 @@ namespace Tarantool\Benchmarks\CodeGenerator;
 
 final class Client
 {
-    public const PACKER_TYPE_PECL = 'pecl';
-    public const PACKER_TYPE_PURE = 'pure';
+    public const PACKER_PECL = 'pecl';
+    public const PACKER_PURE = 'pure';
 
-    public static function generateClient(string $instanceName, string $packerType = self::PACKER_TYPE_PURE) : string
+    public static function generateClient(string $instanceName, string $packerType = self::PACKER_PURE) : string
     {
         return sprintf('$%s = %s;', $instanceName, self::generateClientRaw($packerType));
     }
 
-    public static function generateSpace(string $variableName, int $spaceId, string $packerType = self::PACKER_TYPE_PURE) : string
+    public static function generateSpace(string $variableName, int $spaceId, string $packerType = self::PACKER_PURE) : string
     {
         return sprintf('$%s = (%s)->getSpaceById(%d);', $variableName, self::generateClientRaw($packerType), $spaceId);
     }
 
-    public static function generateHandler(string $variableName, string $packerType = self::PACKER_TYPE_PURE) : string
+    public static function generateHandler(string $variableName, string $packerType = self::PACKER_PURE) : string
     {
         return sprintf('$%s = %s;', $variableName, self::generateHandlerRaw($packerType));
     }

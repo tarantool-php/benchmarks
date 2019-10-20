@@ -53,6 +53,7 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
             'dir' => '{{ root_dir }}/reports/charts',
             'label_column' => 'subject',
             'data_column' => 'mean',
+            'labels' => [],
         ]);
     }
 
@@ -66,6 +67,10 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
             foreach ($reportEl->query('.//table') as $tableEl) {
                 $this->buildDataset($tableEl, $config, $datasets, $labels, $colors);
             }
+        }
+
+        if ([] !== $config['labels']) {
+            $datasets = self::addMissingDatasetLabels($config['labels'], $datasets);
         }
 
         $data = [
@@ -85,9 +90,10 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
 
         foreach ($tableEl->query('.//row') as $rowEl) {
             if (!isset($datasets[$title])) {
-                $datasetLabel = $matches['benchmark'];
                 if ($matches['tag']) {
-                    $datasetLabel = sprintf('%s (%s)', $datasetLabel, str_replace('_', ' ', $matches['tag']));
+                    $datasetLabel = $config['labels'][$matches['tag']] ?? str_replace('_', ' ', $matches['tag']);
+                } else {
+                    $datasetLabel = $matches['benchmark'];
                 }
 
                 $datasets[$title] = [
@@ -118,6 +124,22 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
                 $datasets[$title]['data'][] = preg_replace('/[^\d.]/', '', $value);
             }
         }
+    }
+
+    private static function addMissingDatasetLabels(array $datasetLabels, array $datasets)
+    {
+        foreach ($datasetLabels as $tag => $datasetLabel) {
+            foreach ($datasets as $dataset) {
+                if ($dataset['label'] === $datasetLabel) {
+                    unset($datasetLabels[$tag]);
+                }
+            }
+        }
+        foreach ($datasetLabels as $datasetLabel) {
+            $datasets[] = ['label' => "$datasetLabel (n/a)", 'borderWidth' => 0];
+        }
+
+        return $datasets;
     }
 
     private function saveChartImage(string $filename, array $chartData) : void

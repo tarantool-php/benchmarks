@@ -4,6 +4,7 @@ clr_error := $(shell tty -s > /dev/null 2>&1 && tput setaf 1)
 clr_comment := $(shell tty -s > /dev/null 2>&1 && tput setaf 2)
 clr_info := $(shell tty -s > /dev/null 2>&1 && tput setaf 3)
 clr_reset := $(shell tty -s > /dev/null 2>&1 && tput sgr0)
+comma := ,
 
 define help
 $(clr_info)Usage:$(clr_reset)
@@ -16,7 +17,7 @@ $(clr_info)Targets:$(clr_reset)
     bench-all
         $(clr_comment)Run all benchmarks$(clr_reset)
 
-    bench-sync
+    bench-sync-connectors
         $(clr_comment)Benchmark connectors in sync mode$(clr_reset)
 
     bench-sync-client-packers
@@ -25,38 +26,44 @@ $(clr_info)Targets:$(clr_reset)
     bench-sync-client-protocols
         $(clr_comment)Benchmark binary/SQL protocols in sync mode$(clr_reset)
 
-    bench-async
-        $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-async$(clr_reset)
-
     bench-async-coroutines
         $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-async$(clr_comment) with different number of coroutines$(clr_reset)
+
+    bench-async-connectors
+        $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-async$(clr_reset)
 
     bench-async-client-protocols
         $(clr_comment)Benchmark binary/SQL protocols in async mode using $(clr_info)ext-async$(clr_reset)
 
-    bench-swoole
-        $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-swoole$(clr_reset)
-
     bench-swoole-coroutines
         $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-swoole$(clr_comment) with different number of coroutines$(clr_reset)
+
+    bench-swoole-connectors
+        $(clr_comment)Benchmark connectors in async mode using $(clr_info)ext-swoole$(clr_reset)
 
     bench-swoole-client-protocols
         $(clr_comment)Benchmark binary/SQL protocols in async mode using $(clr_info)ext-swoole$(clr_reset)
 
-    bench-parallel
-        $(clr_comment)Benchmark connectors in parallel mode using $(clr_info)ext-parallel$(clr_reset)
-
     bench-parallel-threads
         $(clr_comment)Benchmark connectors in parallel mode using $(clr_info)ext-parallel$(clr_comment) with different number of threads$(clr_reset)
+
+    bench-parallel-connectors
+        $(clr_comment)Benchmark connectors in parallel mode using $(clr_info)ext-parallel$(clr_reset)
 
     bench-parallel-client-protocols
         $(clr_comment)Benchmark binary/SQL protocols in parallel mode using $(clr_info)ext-parallel$(clr_reset)
 
     bench-extensions
         $(clr_comment)Benchmark pecl extensions$(clr_reset)
+endef
 
-    bench-parallel-with-async
-        $(clr_comment)Benchmark connectors using both $(clr_info)ext-parallel$(clr_comment) and $(clr_info)ext-async$(clr_reset)
+define run_bench
+    cd benchmarks/$(1) && ../../vendor/bin/phpbench run ../$(2)Bench.php --dump-file=../../$@ --tag=$(subst reports/,,$(subst .xml,,$@)) $(phpbench_options) $(3) || true
+endef
+
+define make_report
+    cd benchmarks/$(1) && ../../vendor/bin/phpbench report --file=../../$(subst .xml ,.xml --file=../../,$^) --report=tag-table
+    cd benchmarks/$(1) && ../../vendor/bin/phpbench report --file=../../$(subst .xml ,.xml --file=../../,$^) --report=chart --output='extends: "chart-image", basename: "$(subst -,_,$(subst bench-,,$@))", "labels": {$(2)}'
 endef
 
 
@@ -70,232 +77,233 @@ reports:
 vendor: reports
 	@composer install
 
+reports/%: phpbench_options += $(if $(TNT_BENCH_ITERATIONS), --iterations=$(TNT_BENCH_ITERATIONS),)
+reports/%: phpbench_options += $(if $(TNT_BENCH_REVOLUTIONS), --revs=$(TNT_BENCH_REVOLUTIONS),)
+reports/%: phpbench_options += $(if $(TNT_BENCH_RETRY_THRESHOLD), --retry-threshold=$(TNT_BENCH_RETRY_THRESHOLD),)
+
+
 .PHONY: clean
 clean:
 	@find reports -type f -not -name '_*' -delete
 
 .PHONY: bench-all
 bench-all: \
-	bench-sync \
+	bench-sync-connectors \
 	bench-sync-client-packers \
 	bench-sync-client-protocols \
-	bench-async \
 	bench-async-coroutines \
+	bench-async-connectors \
 	bench-async-client-protocols \
-	bench-swoole \
 	bench-swoole-coroutines \
+	bench-swoole-connectors \
 	bench-swoole-client-protocols \
-	bench-parallel \
 	bench-parallel-threads \
+	bench-parallel-connectors \
 	bench-parallel-client-protocols \
-	bench-extensions \
-	bench-parallel-with-async
+	bench-extensions
 
 
-.PHONY: bench-sync
-bench-sync: vendor
-	@vendor/bin/phpbench run benchmarks/TarantoolBench.php --dump-file=reports/sync__tarantool.xml
-	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync__client_packer_pecl.xml
-	@vendor/bin/phpbench report \
-		--file=reports/sync__tarantool.xml \
-		--file=reports/sync__client_packer_pecl.xml \
-		--report=tag-table
-	@vendor/bin/phpbench report \
-		--file=reports/sync__tarantool.xml \
-		--file=reports/sync__client_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "sync"'
+# sync
+
+reports/sync__tarantool.xml: vendor
+	@$(call run_bench,Sync,Tarantool)
+
+reports/sync__client__packer_pecl.xml: vendor
+	@export TNT_BENCH_PACKER=pecl && $(call run_bench,Sync,Client)
+
+reports/sync__client__packer_pure.xml: vendor
+	@export TNT_BENCH_PACKER=pure && $(call run_bench,Sync,Client)
+
+reports/sync__client__packer_pecl__protocol_bin.xml: vendor
+	@export TNT_BENCH_PACKER=pecl && $(call run_bench,Sync,Client,--filter=select --filter=insert --filter=update --filter=delete)
+
+reports/sync__client__packer_pecl__protocol_sql.xml: vendor
+	@export TNT_BENCH_PACKER=pecl && $(call run_bench,Sync,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
+
+.PHONY: bench-sync-connectors
+bench-sync-connectors: \
+	reports/sync__tarantool.xml \
+	reports/sync__client__packer_pecl.xml
+	@$(call make_report,Sync, \
+		"sync__tarantool": "Tarantool"$(comma) \
+		"sync__client__packer_pecl": "Client" \
+	)
 
 .PHONY: bench-sync-client-packers
-bench-sync-client-packers: vendor
-	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync_client_packers__packer_pecl.xml --tag=pecl_packer
-	@TNT_BENCH_PACKER_TYPE=pure vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync_client_packers__packer_pure.xml --tag=pure_packer
-	@vendor/bin/phpbench report \
-		--file=reports/sync_client_packers__packer_pecl.xml \
-		--file=reports/sync_client_packers__packer_pure.xml \
-		--report=tag-table
-	@vendor/bin/phpbench report \
-		--file=reports/sync_client_packers__packer_pecl.xml \
-		--file=reports/sync_client_packers__packer_pure.xml \
-		--report=chart --output='extends: "chart-image", basename: "sync_client_packers"'
+bench-sync-client-packers: \
+	reports/sync__client__packer_pecl.xml \
+	reports/sync__client__packer_pure.xml
+	@$(call make_report,Sync, \
+		"sync__client__packer_pecl": "Pecl"$(comma) \
+		"sync__client__packer_pure": "Pure" \
+	)
 
 .PHONY: bench-sync-client-protocols
-bench-sync-client-protocols: vendor
-	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientBench.php --dump-file=reports/sync_client_protocols__binary_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@TNT_BENCH_PACKER_TYPE=pecl vendor/bin/phpbench run benchmarks/ClientSqlBench.php --dump-file=reports/sync_client_protocols__sql_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@vendor/bin/phpbench report \
-		--file=reports/sync_client_protocols__binary_packer_pecl.xml \
-		--file=reports/sync_client_protocols__sql_packer_pecl.xml \
-		--report=tag-table
-	@vendor/bin/phpbench report \
-		--file=reports/sync_client_protocols__binary_packer_pecl.xml \
-		--file=reports/sync_client_protocols__sql_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "sync_client_protocols"'
+bench-sync-client-protocols: \
+	reports/sync__client__packer_pecl__protocol_bin.xml \
+	reports/sync__client__packer_pecl__protocol_sql.xml
+	@$(call make_report,Sync, \
+		"sync__client__packer_pecl__protocol_bin": "Binary"$(comma) \
+		"sync__client__packer_pecl__protocol_sql": "Sql" \
+	)
 
 
-.PHONY: bench-async
-bench-async: vendor
-	@cd benchmarks/Async && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async__client_packer_pecl.xml
-	@cd benchmarks/Async && ../../vendor/bin/phpbench report \
-		--file=../../reports/async__client_packer_pecl.xml \
-		--report=tag-table
-	@cd benchmarks/Async && ../../vendor/bin/phpbench report \
-		--file=../../reports/async__client_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "async"'
+# async
+
+reports/async__tarantool__co%.xml: vendor
+	@export TNT_BENCH_COROUTINES=$* && $(call run_bench,Async,Tarantool)
+
+reports/async__client__packer_pecl__co%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Async,Client)
+
+reports/async__client__packer_pecl__protocol_bin__co%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Async,Client,--filter=select --filter=insert --filter=update --filter=delete)
+
+reports/async__client__packer_pecl__protocol_sql__co%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Async,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
 
 .PHONY: bench-async-coroutines
-bench-async-coroutines: vendor
-	@cd benchmarks/Async && TNT_BENCH_COROUTINES=10 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_coroutines__client_packer_pecl_co10.xml --tag=co10
-	@cd benchmarks/Async && TNT_BENCH_COROUTINES=25 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_coroutines__client_packer_pecl_co25.xml --tag=co25
-	@cd benchmarks/Async && TNT_BENCH_COROUTINES=50 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_coroutines__client_packer_pecl_co50.xml --tag=co50
-	@cd benchmarks/Async && TNT_BENCH_COROUTINES=100 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_coroutines__client_packer_pecl_co100.xml --tag=co100
-	@cd benchmarks/Async && TNT_BENCH_COROUTINES=200 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_coroutines__client_packer_pecl_co200.xml --tag=co200
-	@cd benchmarks/Async && ../../vendor/bin/phpbench report \
-		--file=../../reports/async_coroutines__client_packer_pecl_co10.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co25.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co50.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co100.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co200.xml \
-		--report=tag-table
-	@cd benchmarks/Async && ../../vendor/bin/phpbench report \
-		--file=../../reports/async_coroutines__client_packer_pecl_co10.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co25.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co50.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co100.xml \
-		--file=../../reports/async_coroutines__client_packer_pecl_co200.xml \
-		--report=chart --output='extends: "chart-image", basename: "async_coroutines"'
+bench-async-coroutines: \
+	reports/async__client__packer_pecl__co10.xml \
+	reports/async__client__packer_pecl__co25.xml \
+	reports/async__client__packer_pecl__co50.xml \
+	reports/async__client__packer_pecl__co100.xml
+	@$(call make_report,Async, \
+		"async__client__packer_pecl__co10": "co10"$(comma) \
+		"async__client__packer_pecl__co25": "co25"$(comma) \
+		"async__client__packer_pecl__co50": "co50"$(comma) \
+		"async__client__packer_pecl__co100": "co100" \
+	)
+
+.PHONY: bench-async-connectors
+bench-async-connectors: \
+	reports/async__tarantool__co25.xml \
+	reports/async__client__packer_pecl__co25.xml
+	@$(call make_report,Async, \
+		"async__tarantool__co25": "Tarantool"$(comma) \
+		"async__client__packer_pecl__co25": "Client" \
+	)
 
 .PHONY: bench-async-client-protocols
-bench-async-client-protocols: vendor
-	@cd benchmarks/Async && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/async_client_protocols__binary_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@cd benchmarks/Async && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientSqlBench.php --dump-file=../../reports/async_client_protocols__sql_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@cd benchmarks/Async && ../../vendor/bin/phpbench report \
-		--file=../../reports/async_client_protocols__binary_packer_pecl.xml \
-		--file=../../reports/async_client_protocols__sql_packer_pecl.xml \
-		--report=tag-table
-	@cd benchmarks/Async && ../../vendor/bin/phpbench report \
-		--file=../../reports/async_client_protocols__binary_packer_pecl.xml \
-		--file=../../reports/async_client_protocols__sql_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "async_client_protocols"'
+bench-async-client-protocols: \
+	reports/async__client__packer_pecl__protocol_bin__co25.xml \
+	reports/async__client__packer_pecl__protocol_sql__co25.xml
+	@$(call make_report,Async, \
+		"async__client__packer_pecl__protocol_bin__co25": "Binary"$(comma) \
+		"async__client__packer_pecl__protocol_sql__co25": "Sql" \
+	)
 
 
-.PHONY: bench-swoole
-bench-swoole: vendor
-	@cd benchmarks/Swoole && ../../vendor/bin/phpbench run ../TarantoolBench.php --dump-file=../../reports/swoole__tarantool.xml
-	@cd benchmarks/Swoole && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/swoole__client_packer_pecl.xml
-	@cd benchmarks/Swoole && ../../vendor/bin/phpbench report \
-		--file=../../reports/swoole__tarantool.xml \
-		--file=../../reports/swoole__client_packer_pecl.xml \
-		--report=tag-table
-	@cd benchmarks/Swoole && ../../vendor/bin/phpbench report \
-		--file=../../reports/swoole__tarantool.xml \
-		--file=../../reports/swoole__client_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "swoole"'
+# swoole
+
+reports/swoole__tarantool__co%.xml: vendor
+	@export TNT_BENCH_COROUTINES=$* && $(call run_bench,Swoole,Tarantool)
+
+reports/swoole__client__packer_pecl__co%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Swoole,Client)
+
+reports/swoole__client__packer_pecl__protocol_bin__co%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Swoole,Client,--filter=select --filter=insert --filter=update --filter=delete)
+
+reports/swoole__client__packer_pecl__protocol_sql__co%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Swoole,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
 
 .PHONY: bench-swoole-coroutines
-bench-swoole-coroutines: vendor
-	@cd benchmarks/Swoole && TNT_BENCH_COROUTINES=10 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/swoole_coroutines__client_packer_pecl_co10.xml --tag=co10
-	@cd benchmarks/Swoole && TNT_BENCH_COROUTINES=25 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/swoole_coroutines__client_packer_pecl_co25.xml --tag=co25
-	@cd benchmarks/Swoole && TNT_BENCH_COROUTINES=50 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/swoole_coroutines__client_packer_pecl_co50.xml --tag=co50
-	@cd benchmarks/Swoole && TNT_BENCH_COROUTINES=100 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/swoole_coroutines__client_packer_pecl_co100.xml --tag=co100
-	@cd benchmarks/Swoole && TNT_BENCH_COROUTINES=200 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/swoole_coroutines__client_packer_pecl_co200.xml --tag=co200
-	@cd benchmarks/Swoole && ../../vendor/bin/phpbench report \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co10.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co25.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co50.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co100.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co200.xml \
-		--report=tag-table
-	@cd benchmarks/Swoole && ../../vendor/bin/phpbench report \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co10.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co25.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co50.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co100.xml \
-		--file=../../reports/swoole_coroutines__client_packer_pecl_co200.xml \
-		--report=chart --output='extends: "chart-image", basename: "swoole_coroutines"'
+bench-swoole-coroutines: \
+	reports/swoole__client__packer_pecl__co10.xml \
+	reports/swoole__client__packer_pecl__co25.xml \
+	reports/swoole__client__packer_pecl__co50.xml \
+	reports/swoole__client__packer_pecl__co100.xml
+	@$(call make_report,Swoole, \
+		"swoole__client__packer_pecl__co10": "co10"$(comma) \
+		"swoole__client__packer_pecl__co25": "co25"$(comma) \
+		"swoole__client__packer_pecl__co50": "co50"$(comma) \
+		"swoole__client__packer_pecl__co100": "co100" \
+	)
+
+.PHONY: bench-swoole-connectors
+bench-swoole-connectors: \
+	reports/swoole__tarantool__co25.xml \
+	reports/swoole__client__packer_pecl__co25.xml
+	@$(call make_report,Swoole, \
+		"swoole__tarantool__co25": "Tarantool"$(comma) \
+		"swoole__client__packer_pecl__co25": "Client" \
+	)
 
 .PHONY: bench-swoole-client-protocols
-bench-swoole-client-protocols: vendor
-	@cd benchmarks/Swoole && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/swoole_client_protocols__binary_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@cd benchmarks/Swoole && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientSqlBench.php --dump-file=../../reports/swoole_client_protocols__sql_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@cd benchmarks/Swoole && ../../vendor/bin/phpbench report \
-		--file=../../reports/swoole_client_protocols__binary_packer_pecl.xml \
-		--file=../../reports/swoole_client_protocols__sql_packer_pecl.xml \
-		--report=tag-table
-	@cd benchmarks/Swoole && ../../vendor/bin/phpbench report \
-		--file=../../reports/swoole_client_protocols__binary_packer_pecl.xml \
-		--file=../../reports/swoole_client_protocols__sql_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "swoole_client_protocols"'
+bench-swoole-client-protocols: \
+	reports/swoole__client__packer_pecl__protocol_bin__co25.xml \
+	reports/swoole__client__packer_pecl__protocol_sql__co25.xml
+	@$(call make_report,Swoole, \
+		"swoole__client__packer_pecl__protocol_bin__co25": "Binary"$(comma) \
+		"swoole__client__packer_pecl__protocol_sql__co25": "Sql" \
+	)
 
 
-.PHONY: bench-parallel
-bench-parallel: vendor
-	@cd benchmarks/Parallel && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel__client_packer_pecl.xml
-	@cd benchmarks/Parallel && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel__client_packer_pecl.xml \
-		--report=tag-table
-	@cd benchmarks/Parallel && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel__client_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "parallel"'
+# parallel
+
+reports/parallel__tarantool__t%.xml: vendor
+	@export TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,Tarantool)
+
+reports/parallel__client__packer_pecl__t%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,Client)
+
+reports/parallel__client__packer_pecl__protocol_bin__t%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,Client,--filter=select --filter=insert --filter=update --filter=delete)
+
+reports/parallel__client__packer_pecl__protocol_sql__t%.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
 
 .PHONY: bench-parallel-threads
-bench-parallel-threads: vendor
-	@cd benchmarks/Parallel && TNT_BENCH_THREADS=2 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel_threads__client_packer_pecl_t2.xml --tag=t2
-	@cd benchmarks/Parallel && TNT_BENCH_THREADS=4 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel_threads__client_packer_pecl_t4.xml --tag=t4
-	@cd benchmarks/Parallel && TNT_BENCH_THREADS=8 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel_threads__client_packer_pecl_t8.xml --tag=t8
-	@cd benchmarks/Parallel && TNT_BENCH_THREADS=16 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel_threads__client_packer_pecl_t16.xml --tag=t16
-	@cd benchmarks/Parallel && TNT_BENCH_THREADS=32 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel_threads__client_packer_pecl_t32.xml --tag=t32
-	@cd benchmarks/Parallel && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel_threads__client_packer_pecl_t2.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t4.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t8.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t16.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t32.xml \
-		--report=tag-table
-	@cd benchmarks/Parallel && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel_threads__client_packer_pecl_t2.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t4.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t8.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t16.xml \
-		--file=../../reports/parallel_threads__client_packer_pecl_t32.xml \
-		--report=chart --output='extends: "chart-image", basename: "parallel_threads"'
+bench-parallel-threads: \
+	reports/parallel__client__packer_pecl__t2.xml \
+	reports/parallel__client__packer_pecl__t4.xml \
+	reports/parallel__client__packer_pecl__t8.xml \
+	reports/parallel__client__packer_pecl__t16.xml \
+	reports/parallel__client__packer_pecl__t32.xml
+	@$(call make_report,Parallel, \
+		"parallel__client__packer_pecl__t2": "t2"$(comma) \
+		"parallel__client__packer_pecl__t4": "t4"$(comma) \
+		"parallel__client__packer_pecl__t8": "t8"$(comma) \
+		"parallel__client__packer_pecl__t16": "t16"$(comma) \
+		"parallel__client__packer_pecl__t32": "t32" \
+	)
+
+.PHONY: bench-parallel-connectors
+bench-parallel-connectors: \
+	reports/parallel__tarantool__t16.xml \
+	reports/parallel__client__packer_pecl__t16.xml
+	@$(call make_report,Parallel, \
+		"parallel__tarantool__t16":"Tarantool"$(comma) \
+		"parallel__client__packer_pecl__t16":"Client" \
+	)
 
 .PHONY: bench-parallel-client-protocols
-bench-parallel-client-protocols: vendor
-	@cd benchmarks/Parallel && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel_client_protocols__binary_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@cd benchmarks/Parallel && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientSqlBench.php --dump-file=../../reports/parallel_client_protocols__sql_packer_pecl.xml --filter=select --filter=insert --filter=update --filter=delete
-	@cd benchmarks/Parallel && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel_client_protocols__binary_packer_pecl.xml \
-		--file=../../reports/parallel_client_protocols__sql_packer_pecl.xml \
-		--report=tag-table
-	@cd benchmarks/Parallel && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel_client_protocols__binary_packer_pecl.xml \
-		--file=../../reports/parallel_client_protocols__sql_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "parallel_client_protocols"'
+bench-parallel-client-protocols: \
+	reports/parallel__client__packer_pecl__protocol_bin__t16.xml \
+	reports/parallel__client__packer_pecl__protocol_sql__t16.xml
+	@$(call make_report,Parallel, \
+		"parallel__client__packer_pecl__protocol_bin__t16": "Binary"$(comma) \
+		"parallel__client__packer_pecl__protocol_sql__t16": "Sql" \
+	)
 
+
+# extensions
+
+reports/parallel_with_async__client__packer_pecl__t2__co10.xml: vendor
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=10 && $(call run_bench,ParallelWithAsync,Client)
 
 .PHONY: bench-extensions
-bench-extensions: vendor
-	@cd benchmarks/Async && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/extensions__async_client_packer_pecl.xml --tag=async
-	@cd benchmarks/Swoole && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/extensions__swoole_client_packer_pecl.xml --tag=swoole
-	@cd benchmarks/Parallel && TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/extensions__parallel_client_packer_pecl.xml --tag=parallel
-	@vendor/bin/phpbench report \
-		--file=reports/extensions__async_client_packer_pecl.xml \
-		--file=reports/extensions__swoole_client_packer_pecl.xml \
-		--file=reports/extensions__parallel_client_packer_pecl.xml \
-		--report=tag-table
-	@vendor/bin/phpbench report \
-		--file=reports/extensions__async_client_packer_pecl.xml \
-		--file=reports/extensions__swoole_client_packer_pecl.xml \
-		--file=reports/extensions__parallel_client_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "extensions"'
-
-
-.PHONY: bench-parallel-with-async
-bench-parallel-with-async: vendor
-	@cd benchmarks/ParallelWithAsync && TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=10 TNT_BENCH_PACKER_TYPE=pecl ../../vendor/bin/phpbench run ../ClientBench.php --dump-file=../../reports/parallel_with_async__client_packer_pecl.xml
-	@cd benchmarks/ParallelWithAsync && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel_with_async__client_packer_pecl.xml \
-		--report=tag-table
-	@cd benchmarks/ParallelWithAsync && ../../vendor/bin/phpbench report \
-		--file=../../reports/parallel_with_async__client_packer_pecl.xml \
-		--report=chart --output='extends: "chart-image", basename: "parallel_with_async"'
+bench-extensions: \
+	reports/async__client__packer_pecl__co25.xml \
+	reports/swoole__tarantool__co25.xml \
+	reports/parallel__tarantool__t16.xml \
+	reports/parallel__client__packer_pecl__t16.xml \
+	reports/parallel_with_async__client__packer_pecl__t2__co10.xml
+	@$(call make_report,Sync, \
+		"async__client__packer_pecl__co25": "Client (async)"$(comma) \
+		"swoole__tarantool__co25": "Tarantool (swoole)"$(comma) \
+		"parallel__tarantool__t16": "Tarantool (parallel)"$(comma) \
+		"parallel__client__packer_pecl__t16": "Client (parallel)"$(comma) \
+		"parallel_with_async__client__packer_pecl__t2__co10": "Client (parallel+async)" \
+	)

@@ -20,6 +20,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function ping() : array
     {
@@ -32,6 +33,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function call() : array
     {
@@ -43,6 +45,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function evaluate() : array
     {
@@ -54,6 +57,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function select() : array
     {
@@ -69,6 +73,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function insert() : array
     {
@@ -84,6 +89,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function replace() : array
     {
@@ -99,6 +105,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function update() : array
     {
@@ -114,6 +121,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function upsert() : array
     {
@@ -129,6 +137,7 @@ final class ClientHandlerBench
 
     /**
      * @Subject
+     * @Warmup(1)
      */
     public function delete() : array
     {
@@ -146,7 +155,7 @@ final class ClientHandlerBench
     {
         return ClientCodeGenerator::generateHandler(
             $variableName,
-            $_SERVER['TNT_BENCH_PACKER_TYPE']
+            $_SERVER['TNT_BENCH_PACKER']
         );
     }
 }

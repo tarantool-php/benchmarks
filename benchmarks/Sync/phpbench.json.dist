@@ -1,6 +1,6 @@
 {
-    "bootstrap": "vendor/autoload.php",
-    "path": "benchmarks",
+    "bootstrap": "../../vendor/autoload.php",
+    "path": "../",
     "php_disable_ini": true,
     "php_config": {
         "zend_extension": ["opcache.so"],
