@@ -69,16 +69,13 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
             }
         }
 
-        if ([] !== $config['labels']) {
-            $datasets = self::addMissingDatasetLabels($config['labels'], $datasets);
-        }
+        $labels = array_keys($labels);
+        $datasets = self::normalizeDatasets($datasets, $config, $labels);
 
-        $data = [
-            'labels' => array_keys($labels),
-            'datasets' => array_values($datasets),
-        ];
-
-        $this->saveChartImage(self::resolveImageName($config), $data);
+        $this->saveChartImage(self::resolveImageName($config), [
+            'labels' => $labels,
+            'datasets' => $datasets,
+        ]);
     }
 
     private function buildDataset(Element $tableEl, Config $config, array &$datasets, array &$labels, array &$colors) : void
@@ -121,12 +118,30 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
             if ($dataEl->hasAttribute('class')) {
                 $classes = explode(' ', $dataEl->getAttribute('class'));
                 $value = $this->formatter->applyClasses($classes, $value, $formatterParams);
-                $datasets[$title]['data'][] = preg_replace('/[^\d.]/', '', $value);
+                $datasets[$title]['data'][$label] = preg_replace('/[^\d.]/', '', $value);
             }
         }
     }
 
-    private static function addMissingDatasetLabels(array $datasetLabels, array $datasets)
+    private static function normalizeDatasets(array $datasets, Config $config, array $labels) : array
+    {
+        if ([] !== $config['labels']) {
+            $datasets = self::addMissingDatasetLabels($config['labels'], $datasets);
+        }
+
+        foreach ($datasets as $key => $dataset) {
+            $fullData = $dataset['data'] + array_fill_keys($labels, 0);
+            $normData = [];
+            foreach ($labels as $label) {
+                $normData[] = $fullData[$label];
+            }
+            $datasets[$key]['data'] = $normData;
+        }
+
+        return array_values($datasets);
+    }
+
+    private static function addMissingDatasetLabels(array $datasetLabels, array $datasets) : array
     {
         foreach ($datasetLabels as $tag => $datasetLabel) {
             foreach ($datasets as $dataset) {
