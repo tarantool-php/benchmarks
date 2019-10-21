@@ -71,10 +71,7 @@ endef
 help:
 	@echo $(info $(help))
 
-reports:
-	@mkdir reports
-
-vendor: reports
+vendor:
 	@composer install
 
 reports/%: phpbench_options += $(if $(TNT_BENCH_ITERATIONS), --iterations=$(TNT_BENCH_ITERATIONS),)
