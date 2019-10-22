@@ -150,8 +150,13 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
                 }
             }
         }
+
         foreach ($datasetLabels as $datasetLabel) {
-            $datasets[] = ['label' => "$datasetLabel (n/a)", 'borderWidth' => 0];
+            $datasets[] = [
+                'label' => "$datasetLabel (n/a)",
+                'data' => [],
+                'borderWidth' => 0,
+            ];
         }
 
         return $datasets;
