@@ -72,6 +72,7 @@ help:
 vendor:
 	@composer install
 
+reports/%: export TNT_BENCH_TARANTOOL_URI = tcp://localhost:3301
 reports/%: phpbench_options += $(if $(TNT_BENCH_ITERATIONS), --iterations=$(TNT_BENCH_ITERATIONS),)
 reports/%: phpbench_options += $(if $(TNT_BENCH_REVOLUTIONS), --revs=$(TNT_BENCH_REVOLUTIONS),)
 reports/%: phpbench_options += $(if $(TNT_BENCH_RETRY_THRESHOLD), --retry-threshold=$(TNT_BENCH_RETRY_THRESHOLD),)
