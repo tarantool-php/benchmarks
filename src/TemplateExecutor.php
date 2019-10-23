@@ -16,7 +16,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class TemplateExecutor implements BenchmarkExecutorInterface
 {
-    private const TEMPLATE_NAME = 'microtime.php.tpl';
+    private const TEMPLATE_ENV_NAME = 'TNT_BENCH_TEMPLATE';
+    private const TEMPLATE_DEFAULT = 'default.php.tpl';
     private const COROUTINES_ENV_NAME = 'TNT_BENCH_COROUTINES';
     private const COROUTINES_DEFAULT = 25;
     private const THREADS_ENV_NAME = 'TNT_BENCH_THREADS';
@@ -47,6 +48,7 @@ final class TemplateExecutor implements BenchmarkExecutorInterface
         $revolutions = $iteration->getVariant()->getRevolutions();
         $coroutines = $_SERVER[self::COROUTINES_ENV_NAME] ?? self::COROUTINES_DEFAULT;
         $threads = $_SERVER[self::THREADS_ENV_NAME] ?? self::THREADS_DEFAULT;
+        $templateBaseName = $_SERVER[self::TEMPLATE_ENV_NAME] ?? self::TEMPLATE_DEFAULT;
 
         $tokens = [
             'class' => $subjectMetadata->getBenchmark()->getClass(),
@@ -65,7 +67,7 @@ final class TemplateExecutor implements BenchmarkExecutorInterface
             'exec' => $exec,
         ];
 
-        $templatePath = $this->resolveTemplatePath();
+        $templatePath = $this->resolveTemplatePath($templateBaseName);
         $payload = $this->launcher->payload($templatePath, $tokens);
 
         $this->launch($payload, $iteration);
@@ -76,17 +78,14 @@ final class TemplateExecutor implements BenchmarkExecutorInterface
         $result = $payload->launch();
 
         if (isset($result['buffer']) && $result['buffer']) {
-            throw new \RuntimeException(sprintf(
-                'Benchmark made some noise: %s',
-                $result['buffer']
-            ));
+            throw new \RuntimeException(sprintf('Benchmark made some noise: %s', $result['buffer']));
         }
 
         $iteration->setResult(new TimeResult($result['time']));
         $iteration->setResult(MemoryResult::fromArray($result['mem']));
     }
 
-    private function resolveTemplatePath() : string
+    private function resolveTemplatePath(string $templateBaseName) : string
     {
         $paths = [
             $this->configPath,
@@ -94,12 +93,12 @@ final class TemplateExecutor implements BenchmarkExecutorInterface
         ];
 
         foreach ($paths as $path) {
-            $templatePath = sprintf('%s/%s', dirname($path), self::TEMPLATE_NAME);
+            $templatePath = sprintf('%s/%s', dirname($path), $templateBaseName);
             if (file_exists($templatePath)) {
                 return $templatePath;
             }
         }
 
-        throw new \RuntimeException(sprintf('Failed to find template "%s".', self::TEMPLATE_NAME));
+        throw new \RuntimeException(sprintf('Failed to find template "%s".', $templateBaseName));
     }
 }
