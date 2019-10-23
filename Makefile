@@ -289,10 +289,6 @@ bench-parallel-client-protocols: \
 reports/parallel_with_async__client__packer_pecl__t2__co10.xml: vendor
 	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=10 && $(call run_bench,ParallelWithAsync,Client)
 
-reports/parallel_with_swoole__client__packer_pecl__t2__co10.xml: vendor
-	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=12 TNT_BENCH_COROUTINES=25 && $(call run_bench,ParallelWithSwoole,Client)
-
-
 .PHONY: bench-extensions
 bench-extensions: \
 	reports/async__client__packer_pecl__co25.xml \
