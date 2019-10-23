@@ -4,20 +4,8 @@ declare(strict_types=1);
 
 namespace Tarantool\Benchmarks;
 
-use Tarantool\Benchmarks\CodeGenerator\Client as ClientCodeGenerator;
-
-/**
- * @Revs(10000)
- * @Iterations(5)
- * @Sleep(1000000)
- * @OutputMode("throughput")
- * @OutputTimeUnit("seconds")
- * @Executor("template")
- */
-final class ClientBench
+final class ClientBench extends Bench
 {
-    use Fixtures;
-
     /**
      * @Subject
      * @Warmup(1)
@@ -60,7 +48,7 @@ final class ClientBench
      */
     public function select() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
@@ -74,7 +62,7 @@ final class ClientBench
      */
     public function insert() : array
     {
-        $this->resetSchema();
+        self::resetSchema();
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
@@ -88,7 +76,7 @@ final class ClientBench
      */
     public function replace() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
@@ -102,7 +90,7 @@ final class ClientBench
      */
     public function update() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
@@ -116,7 +104,7 @@ final class ClientBench
      */
     public function upsert() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
@@ -130,28 +118,11 @@ final class ClientBench
      */
     public function delete() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
             sprintf('$space->delete([mt_rand(1, %d)]);', Config::ROW_COUNT),
         ];
-    }
-
-    private static function generateClient(string $variableName) : string
-    {
-        return ClientCodeGenerator::generateClient(
-            $variableName,
-            $_SERVER['TNT_BENCH_PACKER'] ?? ClientCodeGenerator::PACKER_PURE
-        );
-    }
-
-    private static function generateSpace(string $variableName, int $spaceId) : string
-    {
-        return ClientCodeGenerator::generateSpace(
-            $variableName,
-            $spaceId,
-            $_SERVER['TNT_BENCH_PACKER']
-        );
     }
 }

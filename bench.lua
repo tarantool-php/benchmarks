@@ -1,11 +1,12 @@
 #!/usr/bin/env tarantool
 
-local listen = os.getenv('TNT_LISTEN_URI')
+local listen = os.getenv('TNT_BENCH_TARANTOOL_URI') or '3301'
 
 box.cfg {
-    listen = (listen == '' or listen == nil) and 3301 or listen,
+    listen = (listen):gsub('^unix://', '', 1):gsub('^unix/:', '', 1):gsub('^tcp://127.0.0.1:', '', 1):gsub('^tcp://localhost:', '', 1):gsub('^tcp://', '', 1),
     wal_mode = 'none',
     snap_dir = '/tmp',
+--    log_level = 7,
     readahead = 1 * 1024 * 1024
 }
 

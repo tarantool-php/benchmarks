@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+  tarantool:
+    image: tarantool/tarantool:2
+    volumes:
+      - ./bench.lua:/opt/tarantool/bench.lua
+    command: tarantool /opt/tarantool/bench.lua
+
+  benchmarks:
+    build: .
+    environment:
+      - TNT_BENCH_TARANTOOL_URI=tcp://tarantool:3301
+    working_dir: /benchmarks
+    command: make
+    volumes:
+      - .:/benchmarks
+    depends_on:
+      - tarantool

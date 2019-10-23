@@ -5,7 +5,7 @@
  * PHP 7.1+ (NTS and ZTS)
  * [Composer](https://getcomposer.org/)
  * [Tarantool](https://www.tarantool.io/) 1.7.1+
- * [ext-msgpack](https://github.com/msgpack/msgpack-php) to benchmark the msgpack pecl extension
+ * [ext-msgpack](https://github.com/msgpack/msgpack-php) to benchmark `Tarantool\Client\Packer\PeclPacker`
  * ext-async ([fork](https://github.com/dreamsxin/ext-async)) to benchmark connectors in async mode
  * [ext-parallel](https://github.com/krakjoe/parallel) to benchmark connectors in parallel mode
  * [ext-swoole](https://github.com/swoole/swoole-src) to benchmark connectors in async mode
@@ -14,7 +14,7 @@
 
 ## Usage
 
-First, make sure you have the [bench.lua](bench.lua) instance running and listening on `localhost` on port `3301`.
+First, make sure you have the [bench.lua](bench.lua) instance running.
 
 > If you want to run it on Docker, execute:
 >
@@ -35,13 +35,22 @@ to see the usage text and a list of all available benchmarks. For example, to (r
 make clean bench-all
 ```
 
+> Alternatively, you may run benchmarks on Docker by prepending 
+> the `make` command with `docker-compose run --rm benchmarks`, e.g.:
+>
+> ```bash
+> docker-compose run --rm benchmarks make clean bench-all
+> ```
+
+
 You may change default benchmark settings by defining the following environment variables
 (in parentheses the default values):
 
-* `TNT_BENCH_TEMPLATE` (`default.php.tpl`)
-* `TNT_BENCH_ITERATIONS` (`5`)
-* `TNT_BENCH_REVOLUTIONS` (`10000`)
-* `TNT_BENCH_RETRY_THRESHOLD` (`2`)
+ * `TNT_BENCH_TARANTOOL_URI` (`tcp://localhost:3301`)
+ * `TNT_BENCH_TEMPLATE` (`default.php.tpl`)
+ * `TNT_BENCH_ITERATIONS` (`5`)
+ * `TNT_BENCH_REVOLUTIONS` (`10000`)
+ * `TNT_BENCH_RETRY_THRESHOLD` (`2`)
 
 For example:
 

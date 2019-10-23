@@ -4,20 +4,8 @@ declare(strict_types=1);
 
 namespace Tarantool\Benchmarks;
 
-use Tarantool\Benchmarks\CodeGenerator\Client as ClientCodeGenerator;
-
-/**
- * @Revs(10000)
- * @Iterations(5)
- * @Sleep(1000000)
- * @OutputMode("throughput")
- * @OutputTimeUnit("seconds")
- * @Executor("template")
- */
-final class ClientHandlerBench
+final class ClientHandlerBench extends Bench
 {
-    use Fixtures;
-
     /**
      * @Subject
      * @Warmup(1)
@@ -61,7 +49,7 @@ final class ClientHandlerBench
      */
     public function select() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateHandler('handler'),
@@ -77,7 +65,7 @@ final class ClientHandlerBench
      */
     public function insert() : array
     {
-        $this->resetSchema();
+        self::resetSchema();
 
         return [
             self::generateHandler('handler'),
@@ -93,7 +81,7 @@ final class ClientHandlerBench
      */
     public function replace() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateHandler('handler'),
@@ -109,7 +97,7 @@ final class ClientHandlerBench
      */
     public function update() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateHandler('handler'),
@@ -125,7 +113,7 @@ final class ClientHandlerBench
      */
     public function upsert() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateHandler('handler'),
@@ -141,7 +129,7 @@ final class ClientHandlerBench
      */
     public function delete() : array
     {
-        $this->loadFixtures();
+        self::loadFixtures();
 
         return [
             self::generateHandler('handler'),
@@ -149,13 +137,5 @@ final class ClientHandlerBench
                 new \Tarantool\Client\Request\DeleteRequest(%d, 0, [mt_rand(1, %d)])
             );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
-    }
-
-    private static function generateHandler(string $variableName) : string
-    {
-        return ClientCodeGenerator::generateHandler(
-            $variableName,
-            $_SERVER['TNT_BENCH_PACKER']
-        );
     }
 }

@@ -9,33 +9,33 @@ final class Client
     public const PACKER_PECL = 'pecl';
     public const PACKER_PURE = 'pure';
 
-    public static function generateClient(string $instanceName, string $packerType = self::PACKER_PURE) : string
+    public static function generateClient(string $variableName, string $uri, string $packer) : string
     {
-        return sprintf('$%s = %s;', $instanceName, self::generateClientRaw($packerType));
+        return sprintf('$%s = %s;', $variableName, self::generateClientRaw($uri, $packer));
     }
 
-    public static function generateSpace(string $variableName, int $spaceId, string $packerType = self::PACKER_PURE) : string
+    public static function generateSpace(string $variableName, int $spaceId, string $uri, string $packer) : string
     {
-        return sprintf('$%s = (%s)->getSpaceById(%d);', $variableName, self::generateClientRaw($packerType), $spaceId);
+        return sprintf('$%s = (%s)->getSpaceById(%d);', $variableName, self::generateClientRaw($uri, $packer), $spaceId);
     }
 
-    public static function generateHandler(string $variableName, string $packerType = self::PACKER_PURE) : string
+    public static function generateHandler(string $variableName, string $uri, string $packer) : string
     {
-        return sprintf('$%s = %s;', $variableName, self::generateHandlerRaw($packerType));
+        return sprintf('$%s = %s;', $variableName, self::generateHandlerRaw($uri, $packer));
     }
 
-    private static function generateClientRaw(string $packerType) : string
+    private static function generateClientRaw(string $uri, string $packer) : string
     {
-        return sprintf('new \Tarantool\Client\Client(%s)', self::generateHandlerRaw($packerType));
+        return sprintf('new \Tarantool\Client\Client(%s)', self::generateHandlerRaw($uri, $packer));
     }
 
-    private static function generateHandlerRaw(string $packerType) : string
+    private static function generateHandlerRaw(string $uri, string $packer) : string
     {
         return sprintf('
             new \Tarantool\Client\Handler\DefaultHandler(
-                \Tarantool\Client\Connection\StreamConnection::createTcp(),
+                \Tarantool\Client\Connection\StreamConnection::createTcp(\'%s\'),
                 new \Tarantool\Client\Packer\%sPacker()
             )
-        ', ucfirst(strtolower($packerType)));
+        ', $uri, ucfirst(strtolower($packer)));
     }
 }
