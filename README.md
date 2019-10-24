@@ -35,8 +35,7 @@ to see the usage text and a list of all available benchmarks. For example, to (r
 make clean bench-all
 ```
 
-> Alternatively, you may run benchmarks on Docker by prepending 
-> the `make` command with `docker-compose run --rm benchmarks`, e.g.:
+> Alternatively, you may run benchmarks on Docker using Docker Compose: 
 >
 > ```bash
 > docker-compose run --rm benchmarks make clean bench-all
@@ -46,11 +45,11 @@ make clean bench-all
 You may change default benchmark settings by defining the following environment variables
 (in parentheses the default values):
 
- * `TNT_BENCH_TARANTOOL_URI` (`tcp://localhost:3301`)
- * `TNT_BENCH_TEMPLATE` (`default.php.tpl`)
- * `TNT_BENCH_ITERATIONS` (`5`)
- * `TNT_BENCH_REVOLUTIONS` (`10000`)
- * `TNT_BENCH_RETRY_THRESHOLD` (`2`)
+ * `TNT_BENCH_TARANTOOL_URI` *(`tcp://localhost:3301`)*
+ * `TNT_BENCH_TEMPLATE` *(`default.php.tpl`)*
+ * `TNT_BENCH_ITERATIONS` *(`5`)*
+ * `TNT_BENCH_REVOLUTIONS` *(`10000`)*
+ * `TNT_BENCH_RETRY_THRESHOLD` *(`2`)*
 
 For example:
 

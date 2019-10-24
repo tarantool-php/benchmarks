@@ -27,7 +27,7 @@ final class ClientHandlerBench extends Bench
     {
         return [
             self::generateHandler('handler'),
-            '$response = $handler->handle(new \Tarantool\Client\Request\CallRequest("math.min", [42, mt_rand(1, 99)]));',
+            '$response = $handler->handle(new \Tarantool\Client\Request\CallRequest("math.min", [42, \mt_rand(1, 99)]));',
         ];
     }
 
@@ -39,7 +39,7 @@ final class ClientHandlerBench extends Bench
     {
         return [
             self::generateHandler('handler'),
-            '$response = $handler->handle(new \Tarantool\Client\Request\EvaluateRequest("return ...", [mt_rand()]));',
+            '$response = $handler->handle(new \Tarantool\Client\Request\EvaluateRequest("return ...", [\mt_rand()]));',
         ];
     }
 
@@ -54,7 +54,7 @@ final class ClientHandlerBench extends Bench
         return [
             self::generateHandler('handler'),
             sprintf('$response = $handler->handle(
-                new \Tarantool\Client\Request\SelectRequest(%d, 0, [mt_rand(1, %d)], 0, \PHP_INT_MAX & 0xffffffff, \Tarantool\Client\Schema\IteratorTypes::EQ)
+                new \Tarantool\Client\Request\SelectRequest(%d, 0, [\mt_rand(1, %d)], 0, \PHP_INT_MAX & 0xffffffff, \Tarantool\Client\Schema\IteratorTypes::EQ)
             );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
@@ -70,7 +70,7 @@ final class ClientHandlerBench extends Bench
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
-                new \Tarantool\Client\Request\InsertRequest(%d, [null, "foobar_".mt_rand()])
+                new \Tarantool\Client\Request\InsertRequest(%d, [null, "foobar_".\mt_rand()])
             );', Config::SPACE_ID),
         ];
     }
@@ -86,7 +86,7 @@ final class ClientHandlerBench extends Bench
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
-                new \Tarantool\Client\Request\ReplaceRequest(%d, [mt_rand(1, %d), "a"])
+                new \Tarantool\Client\Request\ReplaceRequest(%d, [\mt_rand(1, %d), "a"])
             );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
@@ -102,7 +102,7 @@ final class ClientHandlerBench extends Bench
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
-                new \Tarantool\Client\Request\UpdateRequest(%d, 0, [mt_rand(1, %d)], [["=", 1, "a"]])
+                new \Tarantool\Client\Request\UpdateRequest(%d, 0, [\mt_rand(1, %d)], [["=", 1, "a"]])
             );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
@@ -118,7 +118,7 @@ final class ClientHandlerBench extends Bench
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
-                new \Tarantool\Client\Request\UpsertRequest(%d, [mt_rand(1, %d), "a"], [["=", 1, "b"]])
+                new \Tarantool\Client\Request\UpsertRequest(%d, [\mt_rand(1, %d), "a"], [["=", 1, "b"]])
             );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
@@ -134,7 +134,7 @@ final class ClientHandlerBench extends Bench
         return [
             self::generateHandler('handler'),
             sprintf('$handler->handle(
-                new \Tarantool\Client\Request\DeleteRequest(%d, 0, [mt_rand(1, %d)])
+                new \Tarantool\Client\Request\DeleteRequest(%d, 0, [\mt_rand(1, %d)])
             );', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }

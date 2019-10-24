@@ -28,7 +28,7 @@ final class ClientSqlBench extends Bench
 
         return [
             self::generateClient('client'),
-            sprintf('$result = $client->executeQuery("SELECT * FROM \"%s\" WHERE \"id\" = ?", mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
+            sprintf('$result = $client->executeQuery("SELECT * FROM \"%s\" WHERE \"id\" = ?", \mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
         ];
     }
 
@@ -42,7 +42,7 @@ final class ClientSqlBench extends Bench
 
         return [
             self::generateClient('client'),
-            sprintf('$client->executeUpdate("INSERT INTO \"%s\" VALUES (null, ?)", "foobar_".mt_rand());', Config::SPACE_NAME),
+            sprintf('$client->executeUpdate("INSERT INTO \"%s\" VALUES (null, ?)", "foobar_".\mt_rand());', Config::SPACE_NAME),
         ];
     }
 
@@ -56,7 +56,7 @@ final class ClientSqlBench extends Bench
 
         return [
             self::generateClient('client'),
-            sprintf('$client->executeUpdate("UPDATE \"%s\" SET \"name\" = ? WHERE \"id\" = ?", "", mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
+            sprintf('$client->executeUpdate("UPDATE \"%s\" SET \"name\" = ? WHERE \"id\" = ?", "", \mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
         ];
     }
 
@@ -70,7 +70,7 @@ final class ClientSqlBench extends Bench
 
         return [
             self::generateClient('client'),
-            sprintf('$client->executeUpdate("DELETE FROM \"%s\" WHERE \"id\" = ?", mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
+            sprintf('$client->executeUpdate("DELETE FROM \"%s\" WHERE \"id\" = ?", \mt_rand(1, %d));', Config::SPACE_NAME, Config::ROW_COUNT),
         ];
     }
 }

@@ -26,7 +26,7 @@ final class TarantoolBench extends Bench
     {
         return [
             self::generateTarantool('client'),
-            '$result = $client->call("math.min", [42, mt_rand(1, 99)]);',
+            '$result = $client->call("math.min", [42, \mt_rand(1, 99)]);',
         ];
     }
 
@@ -38,7 +38,7 @@ final class TarantoolBench extends Bench
     {
         return [
             self::generateTarantool('client'),
-            '$result = $client->evaluate("return ...", [mt_rand()]);',
+            '$result = $client->evaluate("return ...", [\mt_rand()]);',
         ];
     }
 
@@ -52,7 +52,7 @@ final class TarantoolBench extends Bench
 
         return [
             self::generateTarantool('client'),
-            sprintf('$result = $client->select(%d, [mt_rand(1, %d)]);', Config::SPACE_ID, Config::ROW_COUNT),
+            sprintf('$result = $client->select(%d, [\mt_rand(1, %d)]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -66,7 +66,7 @@ final class TarantoolBench extends Bench
 
         return [
             self::generateTarantool('client'),
-            sprintf('$client->insert(%d, [null, "foobar_".mt_rand()]);', Config::SPACE_ID),
+            sprintf('$client->insert(%d, [null, "foobar_".\mt_rand()]);', Config::SPACE_ID),
         ];
     }
 
@@ -80,7 +80,7 @@ final class TarantoolBench extends Bench
 
         return [
             self::generateTarantool('client'),
-            sprintf('$client->replace(%d, [mt_rand(1, %d), "a"]);', Config::SPACE_ID, Config::ROW_COUNT),
+            sprintf('$client->replace(%d, [\mt_rand(1, %d), "a"]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -94,7 +94,7 @@ final class TarantoolBench extends Bench
 
         return [
             self::generateTarantool('client'),
-            sprintf('$client->update(%d, [mt_rand(1, %d)], [["field" => 1, "op" => "=", "arg" => "a"]]);', Config::SPACE_ID, Config::ROW_COUNT),
+            sprintf('$client->update(%d, [\mt_rand(1, %d)], [["field" => 1, "op" => "=", "arg" => "a"]]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -108,7 +108,7 @@ final class TarantoolBench extends Bench
 
         return [
             self::generateTarantool('client'),
-            sprintf('$client->upsert(%d, [mt_rand(1, %d), "a"], [["field" => 1, "op" => "=", "arg" => "b"]]);', Config::SPACE_ID, Config::ROW_COUNT),
+            sprintf('$client->upsert(%d, [\mt_rand(1, %d), "a"], [["field" => 1, "op" => "=", "arg" => "b"]]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 
@@ -122,7 +122,7 @@ final class TarantoolBench extends Bench
 
         return [
             self::generateTarantool('client'),
-            sprintf('$client->delete(%d, [mt_rand(1, %d)]);', Config::SPACE_ID, Config::ROW_COUNT),
+            sprintf('$client->delete(%d, [\mt_rand(1, %d)]);', Config::SPACE_ID, Config::ROW_COUNT),
         ];
     }
 }

@@ -26,7 +26,7 @@ final class ClientBench extends Bench
     {
         return [
             self::generateClient('client'),
-            '$result = $client->call("math.min", 42, mt_rand(1, 99));',
+            '$result = $client->call("math.min", 42, \mt_rand(1, 99));',
         ];
     }
 
@@ -38,7 +38,7 @@ final class ClientBench extends Bench
     {
         return [
             self::generateClient('client'),
-            '$result = $client->evaluate("return ...", mt_rand());',
+            '$result = $client->evaluate("return ...", \mt_rand());',
         ];
     }
 
@@ -52,7 +52,7 @@ final class ClientBench extends Bench
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
-            sprintf('$result = $space->select(\Tarantool\Client\Schema\Criteria::key([mt_rand(1, %d)]));', Config::ROW_COUNT),
+            sprintf('$result = $space->select(\Tarantool\Client\Schema\Criteria::key([\mt_rand(1, %d)]));', Config::ROW_COUNT),
         ];
     }
 
@@ -66,7 +66,7 @@ final class ClientBench extends Bench
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
-            '$space->insert([null, "foobar_".mt_rand()]);',
+            '$space->insert([null, "foobar_".\mt_rand()]);',
         ];
     }
 
@@ -80,7 +80,7 @@ final class ClientBench extends Bench
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
-            sprintf('$space->replace([mt_rand(1, %d), "a"]);', Config::ROW_COUNT),
+            sprintf('$space->replace([\mt_rand(1, %d), "a"]);', Config::ROW_COUNT),
         ];
     }
 
@@ -94,7 +94,7 @@ final class ClientBench extends Bench
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
-            sprintf('$space->update([mt_rand(1, %d)], \Tarantool\Client\Schema\Operations::set(1, "a"));', Config::ROW_COUNT),
+            sprintf('$space->update([\mt_rand(1, %d)], \Tarantool\Client\Schema\Operations::set(1, "a"));', Config::ROW_COUNT),
         ];
     }
 
@@ -108,7 +108,7 @@ final class ClientBench extends Bench
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
-            sprintf('$space->upsert([mt_rand(1, %d), "a"], \Tarantool\Client\Schema\Operations::set(1, "b"));', Config::ROW_COUNT),
+            sprintf('$space->upsert([\mt_rand(1, %d), "a"], \Tarantool\Client\Schema\Operations::set(1, "b"));', Config::ROW_COUNT),
         ];
     }
 
@@ -122,7 +122,7 @@ final class ClientBench extends Bench
 
         return [
             self::generateSpace('space', Config::SPACE_ID),
-            sprintf('$space->delete([mt_rand(1, %d)]);', Config::ROW_COUNT),
+            sprintf('$space->delete([\mt_rand(1, %d)]);', Config::ROW_COUNT),
         ];
     }
 }
