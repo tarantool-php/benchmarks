@@ -43,7 +43,7 @@ make clean bench-all
 
 
 You may change default benchmark settings by defining the following environment variables
-(in parentheses the default values):
+(in parentheses are the default values):
 
  * `TNT_BENCH_TARANTOOL_URI` *(`tcp://localhost:3301`)*
  * `TNT_BENCH_TEMPLATE` *(`default.php.tpl`)*
