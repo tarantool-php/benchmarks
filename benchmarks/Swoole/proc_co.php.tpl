@@ -56,20 +56,34 @@ echo serialize([
 
 function benchmark()
 {
+    $task = static function () {
+        Co\run(static function() {
+            for ($i = 0; $i < {{ coroutines }}; ++$i) {
+                go(static function () {
+                    {{ init }}
+                    for ($j = 0; $j < {{ revsPerThreadPerCoroutine }}; ++$j) {
+                        {{ exec }}
+                    }
+                });
+            }
+        });
+    };
+
     Swoole\Runtime::enableCoroutine();
 
     $startTime = microtime(true);
 
-    Co\run(static function() {
-        for ($i = 0; $i < {{ coroutines }}; ++$i) {
-            go(static function () {
-                {{ init }}
-                for ($j = 0; $j < {{ revsPerCoroutine }}; ++$j) {
-                    {{ exec }}
-                }
-            });
-        }
-    });
+    $workers = [];
+    for ($i = 0; $i < {{ threads }}; ++$i) {
+        $process = new \Swoole\Process($task);
+        $pid = $process->start();
+        $workers[$pid] = true;
+    }
+
+    while ($workers) {
+        $ret = Swoole\Process::wait();
+        unset($workers[$ret['pid']]);
+    }
 
     $endTime = microtime(true);
 
