@@ -25,7 +25,6 @@
         "chart-image": {
             "renderer": "quickchart"
         }
-    },
-    "retry_threshold": 2
+    }
 }
 
