@@ -206,10 +206,10 @@ reports/swoole__client__packer_pecl__protocol_sql__co%.xml: vendor
 	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Swoole,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
 
 reports/swoole__tarantool__proc2__co25.xml: vendor
-	@export TNT_BENCH_TEMPLATE=proc_co.php.tpl TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=25 && $(call run_bench,Swoole,Tarantool)
+	@export TNT_BENCH_TEMPLATE=proc_co.php.tpl TNT_BENCH_WORKERS=2 TNT_BENCH_COROUTINES=25 && $(call run_bench,Swoole,Tarantool)
 
 reports/swoole__client__packer_pecl__proc2__co25.xml: vendor
-	@export TNT_BENCH_TEMPLATE=proc_co.php.tpl TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=25 && $(call run_bench,Swoole,Client)
+	@export TNT_BENCH_TEMPLATE=proc_co.php.tpl TNT_BENCH_PACKER=pecl TNT_BENCH_WORKERS=2 TNT_BENCH_COROUTINES=25 && $(call run_bench,Swoole,Client)
 
 .PHONY: bench-swoole-coroutines
 bench-swoole-coroutines: \
@@ -250,16 +250,16 @@ bench-swoole-client-protocols: \
 # parallel
 
 reports/parallel__tarantool__t%.xml: vendor
-	@export TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,Tarantool)
+	@export TNT_BENCH_WORKERS=$* && $(call run_bench,Parallel,Tarantool)
 
 reports/parallel__client__packer_pecl__t%.xml: vendor
-	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,Client)
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_WORKERS=$* && $(call run_bench,Parallel,Client)
 
 reports/parallel__client__packer_pecl__protocol_bin__t%.xml: vendor
-	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,Client,--filter=select --filter=insert --filter=update --filter=delete)
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_WORKERS=$* && $(call run_bench,Parallel,Client,--filter=select --filter=insert --filter=update --filter=delete)
 
 reports/parallel__client__packer_pecl__protocol_sql__t%.xml: vendor
-	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=$* && $(call run_bench,Parallel,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_WORKERS=$* && $(call run_bench,Parallel,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
 
 .PHONY: bench-parallel-threads
 bench-parallel-threads: \
@@ -298,7 +298,7 @@ bench-parallel-client-protocols: \
 # extensions
 
 reports/parallel_with_async__client__packer_pecl__t2__co10.xml: vendor
-	@export TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=10 && $(call run_bench,ParallelWithAsync,Client)
+	@export TNT_BENCH_PACKER=pecl TNT_BENCH_WORKERS=2 TNT_BENCH_COROUTINES=10 && $(call run_bench,ParallelWithAsync,Client)
 
 .PHONY: bench-extensions
 bench-extensions: \

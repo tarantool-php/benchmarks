@@ -60,7 +60,7 @@ function benchmark()
         require_once('{{ bootstrap }}');
 
         {{ init }};
-        for ($j = 0; $j < {{ revsPerThread }}; ++$j) {
+        for ($j = 0; $j < {{ revsPerWorker }}; ++$j) {
             {{ exec }}
         }
     };
@@ -68,7 +68,7 @@ function benchmark()
     $startTime = microtime(true);
 
     $futures = [];
-    for ($i = 0; $i < {{ threads }}; ++$i) {
+    for ($i = 0; $i < {{ workers }}; ++$i) {
         $futures[] = (new \parallel\Runtime())->run($task);
     }
 

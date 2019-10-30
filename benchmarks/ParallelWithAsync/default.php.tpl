@@ -63,7 +63,7 @@ function benchmark()
             for ($i = 0; $i < {{ coroutines }}; ++$i) {
                 Concurrent\Task::async(static function () {
                     {{ init }}
-                    for ($j = 0; $j < {{ revsPerThreadPerCoroutine }}; ++$j) {
+                    for ($j = 0; $j < {{ revsPerWorkerPerCoroutine }}; ++$j) {
                         {{ exec }}
                     }
                 });
@@ -74,7 +74,7 @@ function benchmark()
     $startTime = microtime(true);
 
     $futures = [];
-    for ($i = 0; $i < {{ threads }}; ++$i) {
+    for ($i = 0; $i < {{ workers }}; ++$i) {
         $futures[] = (new \parallel\Runtime())->run($task);
     }
 

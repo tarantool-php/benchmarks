@@ -61,7 +61,7 @@ function benchmark()
             for ($i = 0; $i < {{ coroutines }}; ++$i) {
                 go(static function () {
                     {{ init }}
-                    for ($j = 0; $j < {{ revsPerThreadPerCoroutine }}; ++$j) {
+                    for ($j = 0; $j < {{ revsPerWorkerPerCoroutine }}; ++$j) {
                         {{ exec }}
                     }
                 });
@@ -74,7 +74,7 @@ function benchmark()
     $startTime = microtime(true);
 
     $workers = [];
-    for ($i = 0; $i < {{ threads }}; ++$i) {
+    for ($i = 0; $i < {{ workers }}; ++$i) {
         $process = new \Swoole\Process($task);
         $pid = $process->start();
         $workers[$pid] = true;
