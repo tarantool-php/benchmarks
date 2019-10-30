@@ -33,6 +33,6 @@ final class Client
                 \Tarantool\Client\Connection\StreamConnection::createTcp(\'%s\'),
                 new \Tarantool\Client\Packer\%sPacker()
             )
-        ', $uri, ucfirst(strtolower($packer)));
+        ', $uri, ucfirst($packer));
     }
 }
