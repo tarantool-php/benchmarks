@@ -6,9 +6,6 @@ namespace Tarantool\Benchmarks\CodeGenerator;
 
 final class Client
 {
-    public const PACKER_PECL = 'pecl';
-    public const PACKER_PURE = 'pure';
-
     public static function generateClient(string $variableName, string $uri, string $packer) : string
     {
         return sprintf('$%s = %s;', $variableName, self::generateClientRaw($uri, $packer));
