@@ -49,7 +49,7 @@ You may change default benchmark settings by defining the following environment 
  * `TNT_BENCH_TEMPLATE` *(`default.php.tpl`)*
  * `TNT_BENCH_ITERATIONS` *(`5`)*
  * `TNT_BENCH_REVOLUTIONS` *(`10000`)*
- * `TNT_BENCH_RETRY_THRESHOLD` *(`2`)*
+ * `TNT_BENCH_RETRY_THRESHOLD` *(`3`)*
 
 For example:
 
