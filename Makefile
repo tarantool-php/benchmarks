@@ -123,7 +123,7 @@ bench-sync-connectors: \
 	reports/sync__client__packer_pecl.xml
 	@$(call make_report,Sync, \
 		"sync__tarantool": "Tarantool"$(comma) \
-		"sync__client__packer_pecl": "Client" \
+		"sync__client__packer_pecl": "Client (pecl packer)" \
 	)
 
 .PHONY: bench-sync-client-packers
@@ -205,6 +205,12 @@ reports/swoole__client__packer_pecl__protocol_bin__co%.xml: vendor
 reports/swoole__client__packer_pecl__protocol_sql__co%.xml: vendor
 	@export TNT_BENCH_PACKER=pecl TNT_BENCH_COROUTINES=$* && $(call run_bench,Swoole,ClientSql,--filter=select --filter=insert --filter=update --filter=delete)
 
+reports/swoole__tarantool__proc2__co25.xml: vendor
+	@export TNT_BENCH_TEMPLATE=proc_co.php.tpl TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=25 && $(call run_bench,Swoole,Tarantool)
+
+reports/swoole__client__packer_pecl__proc2__co25.xml: vendor
+	@export TNT_BENCH_TEMPLATE=proc_co.php.tpl TNT_BENCH_PACKER=pecl TNT_BENCH_THREADS=2 TNT_BENCH_COROUTINES=25 && $(call run_bench,Swoole,Client)
+
 .PHONY: bench-swoole-coroutines
 bench-swoole-coroutines: \
 	reports/swoole__client__packer_pecl__co10.xml \
@@ -221,10 +227,14 @@ bench-swoole-coroutines: \
 .PHONY: bench-swoole-connectors
 bench-swoole-connectors: \
 	reports/swoole__tarantool__co25.xml \
-	reports/swoole__client__packer_pecl__co25.xml
+	reports/swoole__tarantool__proc2__co25.xml \
+	reports/swoole__client__packer_pecl__co25.xml \
+	reports/swoole__client__packer_pecl__proc2__co25.xml
 	@$(call make_report,Swoole, \
-		"swoole__tarantool__co25": "Tarantool"$(comma) \
-		"swoole__client__packer_pecl__co25": "Client" \
+		"swoole__tarantool__co25": "Tarantool (co25)"$(comma) \
+		"swoole__tarantool__proc2__co25": "Tarantool (co25 proc2)"$(comma) \
+		"swoole__client__packer_pecl__co25": "Client (co25)"$(comma) \
+		"swoole__client__packer_pecl__proc2__co25": "Client (co25 proc2)" \
 	)
 
 .PHONY: bench-swoole-client-protocols
@@ -294,12 +304,16 @@ reports/parallel_with_async__client__packer_pecl__t2__co10.xml: vendor
 bench-extensions: \
 	reports/async__client__packer_pecl__co25.xml \
 	reports/swoole__tarantool__co25.xml \
+	reports/swoole__tarantool__proc2__co25.xml \
+	reports/swoole__client__packer_pecl__proc2__co25.xml \
 	reports/parallel__tarantool__t16.xml \
 	reports/parallel__client__packer_pecl__t16.xml \
 	reports/parallel_with_async__client__packer_pecl__t2__co10.xml
 	@$(call make_report,Sync, \
 		"async__client__packer_pecl__co25": "Client (async)"$(comma) \
 		"swoole__tarantool__co25": "Tarantool (swoole)"$(comma) \
+		"swoole__tarantool__proc2__co25": "Tarantool (swoole 2 proc)"$(comma) \
+		"swoole__client__packer_pecl__proc2__co25": "Client (swoole 2 proc)"$(comma) \
 		"parallel__tarantool__t16": "Tarantool (parallel)"$(comma) \
 		"parallel__client__packer_pecl__t16": "Client (parallel)"$(comma) \
 		"parallel_with_async__client__packer_pecl__t2__co10": "Client (parallel+async)" \
