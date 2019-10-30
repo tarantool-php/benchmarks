@@ -67,7 +67,7 @@ The below results were made running benchmarks on Apple MacBook Pro (2015) on th
  * Docker 19.03.3, build a872fc2f86
  * PHP 7.3.10 (cli) (built: Sep 24 2019 09:20:18) ( NTS )
  * PHP 7.3.10 (cli) (built: Sep 24 2019 09:20:18) ( ZTS )
- * tarantool/client 0.6.0-dev-61c7328
+ * tarantool/client 0.6.0-dev-d7feede
  * ext-msgpack 2.0.3
  * ext-async 0.3.0
  * ext-swoole 4.4.7
