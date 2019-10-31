@@ -72,10 +72,14 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
         $labels = array_keys($labels);
         $datasets = self::normalizeDatasets($datasets, $config, $labels);
 
-        $this->saveChartImage(self::resolveImageName($config), [
+        $imageFilename = self::resolveImageFilename($config);
+        $url = $this->saveChartImage($imageFilename, [
             'labels' => $labels,
             'datasets' => $datasets,
         ]);
+
+        $this->output->writeln("Url: <comment>$url</comment>");
+        $this->output->writeln("Chart image saved to <comment>$imageFilename</comment>");
     }
 
     private function buildDataset(Element $tableEl, Config $config, array &$datasets, array &$labels, array &$colors) : void
@@ -162,7 +166,7 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
         return $datasets;
     }
 
-    private function saveChartImage(string $filename, array $chartData) : void
+    private function saveChartImage(string $filename, array $chartData) : string
     {
         $url = 'https://quickchart.io/chart?'.http_build_query([
             'width' => 300,
@@ -213,11 +217,10 @@ final class QuickChartRenderer implements RendererInterface, OutputAwareInterfac
 
         (new Filesystem())->dumpFile($filename, file_get_contents($url));
 
-        $this->output->writeln("Url: <comment>$url</comment>");
-        $this->output->writeln("File saved to <comment>$filename</comment>");
+        return $url;
     }
 
-    private static function resolveImageName(Config $config) : string
+    private static function resolveImageFilename(Config $config) : string
     {
         $dir = preg_replace('/{{\s*?root_dir\s*?}}/', dirname(__DIR__), $config['dir']);
         $basename = $config['basename'] ?? 'chart.'.time();
