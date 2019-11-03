@@ -67,7 +67,7 @@ make clean bench-all TNT_BENCH_REVOLUTIONS=20000 TNT_BENCH_RETRY_THRESHOLD=5
 
 ## Results
 
-The below results were made running benchmarks on Apple MacBook Pro (2015) on the following environment: 
+The below results were made by running benchmarks on Apple MacBook Pro (2015) on the following environment: 
 
  * Linux Fedora 30
  * Tarantool 2.3.0-115-g5ba5ed37e running on Docker
