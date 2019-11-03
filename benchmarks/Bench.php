@@ -15,13 +15,27 @@ use Tarantool\Client\Client;
  * @OutputMode("throughput")
  * @OutputTimeUnit("seconds")
  * @Executor("template")
+ * @BeforeMethods({"stopLuaGc"})
+ * @AfterMethods({"restartLuaGc"})
  */
 abstract class Bench
 {
+    public function stopLuaGc() : void
+    {
+        Client::fromOptions(['uri' => self::getEnv('TNT_BENCH_TARANTOOL_URI')])
+            ->call('stop_gc');
+    }
+
+    public function restartLuaGc() : void
+    {
+        Client::fromOptions(['uri' => self::getEnv('TNT_BENCH_TARANTOOL_URI')])
+            ->call('restart_gc');
+    }
+
     final protected static function resetSchema() : void
     {
         Client::fromOptions(['uri' => self::getEnv('TNT_BENCH_TARANTOOL_URI')])
-            ->evaluate('create_space(...)', Config::all());
+            ->call('create_space', Config::all());
     }
 
     final protected static function loadFixtures() : void

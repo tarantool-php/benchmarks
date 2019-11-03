@@ -22,14 +22,22 @@ function create_space(config)
     space = box.schema.space.create(config.space_name, {id = config.space_id, temporary = true})
     space:create_index('primary', {type = 'tree', parts = {1, 'unsigned'}, sequence = true})
     space:format({{name = 'id', type = 'unsigned'}, {name = 'name', type = 'string', is_nullable = false}})
-
-    return space
 end
 
 function load_fixtures(config)
-    local space = create_space(config)
+    local space = box.space[config.space_name]
 
     for i = 1, config.row_count do
         space:replace{i, 'tuple_' .. i}
     end
+end
+
+function stop_gc()
+    collectgarbage('collect')
+    collectgarbage('stop')
+end
+
+function restart_gc()
+    collectgarbage('collect')
+    collectgarbage('restart')
 end

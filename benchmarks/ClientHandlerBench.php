@@ -49,6 +49,7 @@ final class ClientHandlerBench extends Bench
      */
     public function select() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [
@@ -81,6 +82,7 @@ final class ClientHandlerBench extends Bench
      */
     public function replace() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [
@@ -97,6 +99,7 @@ final class ClientHandlerBench extends Bench
      */
     public function update() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [
@@ -113,6 +116,7 @@ final class ClientHandlerBench extends Bench
      */
     public function upsert() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [
@@ -129,6 +133,7 @@ final class ClientHandlerBench extends Bench
      */
     public function delete() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [

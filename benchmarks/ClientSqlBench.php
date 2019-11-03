@@ -24,6 +24,7 @@ final class ClientSqlBench extends Bench
      */
     public function select() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [
@@ -52,6 +53,7 @@ final class ClientSqlBench extends Bench
      */
     public function update() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [
@@ -66,6 +68,7 @@ final class ClientSqlBench extends Bench
      */
     public function delete() : array
     {
+        self::resetSchema();
         self::loadFixtures();
 
         return [
