@@ -1,5 +1,12 @@
 # Benchmarks for Tarantool PHP connectors
 
+This repository contains code to benchmark PHP connectors for [Tarantool](https://www.tarantool.io/).
+Currently, there are two connectors available:
+
+ * [tarantool/client](https://github.com/tarantool-php/client) written in pure PHP 
+ * The official [PECL](https://github.com/tarantool/tarantool-php) extension
+
+
 # Requirements
 
  * PHP 7.1+ (NTS and ZTS)
