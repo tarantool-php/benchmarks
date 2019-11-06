@@ -27,20 +27,23 @@ foreach ($beforeMethods as $beforeMethod) {
 
 // warmup if required
 if ($warmup) {
+    {{ init }}
     for ($i = 0; $i < $warmup; ++$i) {
-        {{ init }}
         {{ exec }}
     }
 }
 
+Swoole\Runtime::enableCoroutine();
+
 $time = benchmark();
 
-foreach ($afterMethods as $afterMethod) {
-    $benchmark->$afterMethod($parameters);
-}
+Co\run(static function() use ($afterMethods, $benchmark) {
+    foreach ($afterMethods as $afterMethod) {
+        $benchmark->$afterMethod($parameters);
+    }
+});
 
-$buffer = ob_get_contents();
-ob_end_clean();
+$buffer = ob_get_clean();
 
 echo serialize([
     'mem' => [
@@ -68,8 +71,6 @@ function benchmark()
             }
         });
     };
-
-    Swoole\Runtime::enableCoroutine();
 
     $startTime = microtime(true);
 

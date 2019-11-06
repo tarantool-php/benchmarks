@@ -27,8 +27,8 @@ foreach ($beforeMethods as $beforeMethod) {
 
 // warmup if required
 if ($warmup) {
+    {{ init }}
     for ($i = 0; $i < $warmup; ++$i) {
-        {{ init }}
         {{ exec }}
     }
 }
@@ -39,8 +39,7 @@ foreach ($afterMethods as $afterMethod) {
     $benchmark->$afterMethod($parameters);
 }
 
-$buffer = ob_get_contents();
-ob_end_clean();
+$buffer = ob_get_clean();
 
 echo serialize([
     'mem' => [
