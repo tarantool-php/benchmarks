@@ -76,8 +76,8 @@ The below results were made by running benchmarks on Apple MacBook Pro (2015) on
  * PHP 7.3.10 (cli) (built: Sep 24 2019 09:20:18) ( ZTS )
  * tarantool/client 0.6.0
  * ext-msgpack 2.0.3
- * ext-async 0.3.0
- * ext-swoole 4.4.7
+ * ext-async 0.3.0-8c1da46
+ * ext-swoole 4.4.12
  * ext-parallel 1.1.4-dev
  * ext-tarantool 0.3.2 with the [patch](https://github.com/tarantool/tarantool-php/pull/148/files) 
 
