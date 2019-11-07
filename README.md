@@ -72,13 +72,13 @@ The below results were made by running benchmarks on Apple MacBook Pro (2015) on
  * Linux Fedora 30
  * Tarantool 2.3.0-115-g5ba5ed37e running on Docker
  * Docker 19.03.3, build a872fc2f86
- * PHP 7.3.10 (cli) (built: Sep 24 2019 09:20:18) ( NTS )
- * PHP 7.3.10 (cli) (built: Sep 24 2019 09:20:18) ( ZTS )
+ * PHP 7.3.11 (cli) (built: Oct 22 2019 08:11:04) ( NTS )
+ * PHP 7.3.11 (cli) (built: Oct 22 2019 08:11:04) ( ZTS )
  * tarantool/client 0.6.0
  * ext-msgpack 2.0.3
  * ext-async 0.3.0-8c1da46
  * ext-swoole 4.4.12
- * ext-parallel 1.1.4-dev
+ * ext-parallel 1.1.3
  * ext-tarantool 0.3.2 with the [patch](https://github.com/tarantool/tarantool-php/pull/148/files) 
 
 #### bench-sync-connectors
