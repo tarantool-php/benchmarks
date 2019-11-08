@@ -24,8 +24,8 @@ final class ClientSqlBench extends Bench
      */
     public function select() : array
     {
-        self::resetSchema();
-        self::loadFixtures();
+        $this->resetSchema();
+        $this->loadFixtures();
 
         return [
             self::generateClient('client'),
@@ -39,7 +39,7 @@ final class ClientSqlBench extends Bench
      */
     public function insert() : array
     {
-        self::resetSchema();
+        $this->resetSchema();
 
         return [
             self::generateClient('client'),
@@ -53,8 +53,8 @@ final class ClientSqlBench extends Bench
      */
     public function update() : array
     {
-        self::resetSchema();
-        self::loadFixtures();
+        $this->resetSchema();
+        $this->loadFixtures();
 
         return [
             self::generateClient('client'),
@@ -68,8 +68,8 @@ final class ClientSqlBench extends Bench
      */
     public function delete() : array
     {
-        self::resetSchema();
-        self::loadFixtures();
+        $this->resetSchema();
+        $this->loadFixtures();
 
         return [
             self::generateClient('client'),

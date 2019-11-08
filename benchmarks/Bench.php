@@ -20,26 +20,26 @@ use Tarantool\Client\Client;
  */
 abstract class Bench
 {
-    private static $client;
+    private $client;
 
     public function stopLuaGc() : void
     {
-        self::getConnectedClient()->call('stop_gc');
+        $this->getConnectedClient()->call('stop_gc');
     }
 
     public function restartLuaGc() : void
     {
-        self::getConnectedClient()->call('restart_gc');
+        $this->getConnectedClient()->call('restart_gc');
     }
 
-    final protected static function resetSchema() : void
+    public function resetSchema() : void
     {
-        self::getConnectedClient()->call('create_space', Config::all());
+        $this->getConnectedClient()->call('create_space', Config::all());
     }
 
-    final protected static function loadFixtures() : void
+    public function loadFixtures() : void
     {
-        self::getConnectedClient()->call('load_fixtures', Config::all());
+        $this->getConnectedClient()->call('load_fixtures', Config::all());
     }
 
     final protected static function generateHandler(string $variableName) : string
@@ -87,15 +87,15 @@ abstract class Bench
         throw new \Error(sprintf('Environment variable "%s" is not defined.', $name));
     }
 
-    private static function getConnectedClient() : Client
+    private function getConnectedClient() : Client
     {
-        if (self::$client) {
-            return self::$client;
+        if ($this->client) {
+            return $this->client;
         }
 
-        self::$client = Client::fromOptions(['uri' => self::getEnv('TNT_BENCH_TARANTOOL_URI')]);
-        self::$client->getHandler()->getConnection()->open();
+        $this->client = Client::fromOptions(['uri' => self::getEnv('TNT_BENCH_TARANTOOL_URI')]);
+        $this->client->getHandler()->getConnection()->open();
 
-        return self::$client;
+        return $this->client;
     }
 }
