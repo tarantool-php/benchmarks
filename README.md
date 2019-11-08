@@ -7,7 +7,7 @@ Currently, there are two connectors available:
  * The official [PECL](https://github.com/tarantool/tarantool-php) extension
 
 
-#№ Requirements
+## Requirements
 
  * PHP 7.1+ (NTS and ZTS)
  * [Composer](https://getcomposer.org/)
