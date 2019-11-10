@@ -82,43 +82,43 @@ The below results were made by running benchmarks on Apple MacBook Pro (2015) on
  * ext-tarantool 0.3.2 with the [patch](https://github.com/tarantool/tarantool-php/pull/148/files) 
 
 #### Sync connectors
-![sync_connectors.png](reports/charts/sync_connectors.png)
+![chart](reports/charts/_sync_connectors.png)
 
 #### Sync client packers
-![sync_client_packers.png](reports/charts/sync_client_packers.png)
+![chart](reports/charts/_sync_client_packers.png)
 
 #### Sync client protocols
-![sync_client_protocols.png](reports/charts/sync_client_protocols.png)
+![chart](reports/charts/_sync_client_protocols.png)
 
 #### Async coroutines
-![async_coroutines.png](reports/charts/async_coroutines.png)
+![chart](reports/charts/_async_coroutines.png)
 
 #### Async connectors
-![async_connectors.png](reports/charts/async_connectors.png)
+![chart](reports/charts/_async_connectors.png)
 
 #### Async client protocols
-![async_client_protocols.png](reports/charts/async_client_protocols.png)
+![chart](reports/charts/_async_client_protocols.png)
 
 #### Swoole coroutines
-![swoole_coroutines.png](reports/charts/swoole_coroutines.png)
+![chart](reports/charts/_swoole_coroutines.png)
 
 #### Swoole connectors
-![swoole_connectors.png](reports/charts/swoole_connectors.png)
+![chart](reports/charts/_swoole_connectors.png)
 
 #### Swoole client protocols
-![swoole_client_protocols.png](reports/charts/swoole_client_protocols.png)
+![chart](reports/charts/_swoole_client_protocols.png)
 
 #### Parallel threads
-![parallel_threads.png](reports/charts/parallel_threads.png)
+![chart](reports/charts/_parallel_threads.png)
 
 #### Parallel connectors
-![parallel_connectors.png](reports/charts/parallel_connectors.png)
+![chart](reports/charts/_parallel_connectors.png)
 
 #### Parallel client protocols
-![parallel_client_protocols.png](reports/charts/parallel_client_protocols.png)
+![chart](reports/charts/_parallel_client_protocols.png)
 
 #### All extensions
-![extensions.png](reports/charts/extensions.png)
+![chart](reports/charts/_extensions.png)
 
 
 ## License

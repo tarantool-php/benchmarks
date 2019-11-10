@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<phpbench xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="@git_tag@">
+  <suite tag="async__tarantool__co25" context="async__tarantool__co25" date="2019-11-10T12:29:24+00:00" config-path="/home/gen/develop/tarantool-php/benchmarks/benchmarks/Async/phpbench.json.dist" uuid="1341786deec703f712bb4ab876ac5147045c2e50">
+    <env>
+      <uname os="Linux" host="localhost.localdomain" release="5.3.8-200.fc30.x86_64" version="#1 SMP Tue Oct 29 14:46:22 UTC 2019" machine="x86_64"/>
+      <php xdebug="" version="7.3.11" ini="" extensions="Core, date, libxml, openssl, pcre, zlib, filter, hash, pcntl, readline, Reflection, SPL, session, standard, async, msgpack, tarantool, Zend OPcache"/>
+      <opcache extension_loaded="1" enabled="1"/>
+      <unix-sysload l1="0.49" l5="0.48" l15="0.56"/>
+      <baseline nothing="0.08702278137207" md5="0.79107284545898" file_rw="1.5530586242676"/>
+    </env>
+    <benchmark class="\Tarantool\Benchmarks\TarantoolBench">
+      <subject name="ping">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="call">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="evaluate">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="select">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="insert">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="replace">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="update">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="upsert">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+      <subject name="delete">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <errors>
+            <error exception-class="Symfony\Component\Process\Exception\ProcessSignaledException" code="0" file="/home/gen/develop/tarantool-php/benchmarks/vendor/symfony/process/Process.php" line="423">The process has been signaled with signal "11".</error>
+          </errors>
+        </variant>
+      </subject>
+    </benchmark>
+  </suite>
+</phpbench>

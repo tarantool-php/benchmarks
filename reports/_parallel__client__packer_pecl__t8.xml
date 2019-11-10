@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<phpbench xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="@git_tag@">
+  <suite tag="parallel__client__packer_pecl__t8" context="parallel__client__packer_pecl__t8" date="2019-11-10T13:35:20+00:00" config-path="/home/gen/develop/tarantool-php/benchmarks/benchmarks/Parallel/phpbench.json.dist" uuid="1341786d0b151405a8aa3061e8117dd25752ec8f">
+    <env>
+      <uname os="Linux" host="localhost.localdomain" release="5.3.8-200.fc30.x86_64" version="#1 SMP Tue Oct 29 14:46:22 UTC 2019" machine="x86_64"/>
+      <php xdebug="" version="7.3.11" ini="" extensions="Core, date, libxml, openssl, pcre, zlib, filter, hash, pcntl, readline, Reflection, SPL, session, standard, parallel, msgpack, tarantool, Zend OPcache"/>
+      <opcache extension_loaded="1" enabled="1"/>
+      <unix-sysload l1="0.33" l5="0.53" l15="0.43"/>
+      <baseline nothing="0.11491775512695" md5="0.86212158203125" file_rw="1.7549991607666"/>
+    </env>
+    <benchmark class="\Tarantool\Benchmarks\ClientBench">
+      <subject name="ping">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="154962" mem-peak="1000288" mem-real="2097152" mem-final="686128" comp-z-value="-0.026062336228485" comp-deviation="-0.035222034285368"/>
+          <iteration time-net="153044" mem-peak="1000288" mem-real="2097152" mem-final="686128" comp-z-value="-0.94158542938277" comp-deviation="-1.2725088796942"/>
+          <iteration time-net="154950" mem-peak="1000288" mem-real="2097152" mem-final="686128" comp-z-value="-0.03179032221277" comp-deviation="-0.042963140721716" reject-count="1"/>
+          <iteration time-net="158879" mem-peak="1000288" mem-real="2097152" mem-final="686128" comp-z-value="1.843647755474" comp-deviation="2.4916041249776"/>
+          <iteration time-net="153248" mem-peak="1000288" mem-real="2097152" mem-final="686128" comp-z-value="-0.84420966764999" comp-deviation="-1.1409100702764"/>
+          <stats max="15.8879" mean="15.50166" min="15.3044" mode="15.409452837573" rstdev="1.3514534528517" stdev="0.20949771931933" sum="77.5083" variance="0.0438892944"/>
+        </variant>
+      </subject>
+      <subject name="call">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="146819" mem-peak="1000968" mem-real="2097152" mem-final="686728" comp-z-value="-0.33167302902675" comp-deviation="-0.32289031641349"/>
+          <iteration time-net="147012" mem-peak="1000968" mem-real="2097152" mem-final="686728" comp-z-value="-0.19707905383297" comp-deviation="-0.1918603940674"/>
+          <iteration time-net="146543" mem-peak="1000968" mem-real="2097152" mem-final="686728" comp-z-value="-0.52414938733498" comp-deviation="-0.51026989448357"/>
+          <iteration time-net="150083" mem-peak="1000968" mem-real="2097152" mem-final="686728" comp-z-value="1.9445691214008" comp-deviation="1.8930768677195" reject-count="2"/>
+          <iteration time-net="146016" mem-peak="1000968" mem-real="2097152" mem-final="686728" comp-z-value="-0.89166765120609" comp-deviation="-0.86805626275505"/>
+          <stats max="15.0083" mean="14.72946" min="14.6016" mode="14.662087671233" rstdev="0.97351996742384" stdev="0.14339423419371" sum="73.6473" variance="0.0205619064"/>
+        </variant>
+      </subject>
+      <subject name="evaluate">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="147715" mem-peak="1000712" mem-real="2097152" mem-final="687264" comp-z-value="1.0465508495901" comp-deviation="1.841088878869"/>
+          <iteration time-net="143692" mem-peak="1000712" mem-real="2097152" mem-final="687264" comp-z-value="-0.53009462221225" comp-deviation="-0.93254074953497"/>
+          <iteration time-net="148193" mem-peak="1000712" mem-real="2097152" mem-final="687264" comp-z-value="1.2338828246141" comp-deviation="2.1706426850776"/>
+          <iteration time-net="141450" mem-peak="1000712" mem-real="2097152" mem-final="687264" comp-z-value="-1.4087521284963" comp-deviation="-2.4782722004128"/>
+          <iteration time-net="144173" mem-peak="1000712" mem-real="2097152" mem-final="687264" comp-z-value="-0.34158692349564" comp-deviation="-0.60091861399873"/>
+          <stats max="14.8193" mean="14.50446" min="14.145" mode="14.394398630137" rstdev="1.7591967744234" stdev="0.25516199246753" sum="72.5223" variance="0.0651076424"/>
+        </variant>
+      </subject>
+      <subject name="select">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="153497" mem-peak="1001592" mem-real="2097152" mem-final="759728" comp-z-value="-1.0803217199958" comp-deviation="-1.6058747889453"/>
+          <iteration time-net="158101" mem-peak="1001592" mem-real="2097152" mem-final="759728" comp-z-value="0.90506914654611" comp-deviation="1.3453656422794"/>
+          <iteration time-net="157336" mem-peak="1001592" mem-real="2097152" mem-final="759728" comp-z-value="0.5751768761498" comp-deviation="0.85498794247774"/>
+          <iteration time-net="152893" mem-peak="1001592" mem-real="2097152" mem-final="759728" comp-z-value="-1.3407856825048" comp-deviation="-1.9930488159782"/>
+          <iteration time-net="158184" mem-peak="1001592" mem-real="2097152" mem-final="759728" comp-z-value="0.94086137980479" comp-deviation="1.3985700201664" reject-count="1"/>
+          <stats max="15.8184" mean="15.60022" min="15.2893" mode="15.768699804306" rstdev="1.4864782955132" stdev="0.2318938843523" sum="78.0011" variance="0.0537747736"/>
+        </variant>
+      </subject>
+      <subject name="insert">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="154481" mem-peak="1001088" mem-real="2097152" mem-final="688720" comp-z-value="-0.79221577992764" comp-deviation="-0.94844710381239" reject-count="1"/>
+          <iteration time-net="155417" mem-peak="1001088" mem-real="2097152" mem-final="688720" comp-z-value="-0.29092185752886" comp-deviation="-0.3482939878251"/>
+          <iteration time-net="156541" mem-peak="1001088" mem-real="2097152" mem-final="688720" comp-z-value="0.31105930569359" comp-deviation="0.37240270274082"/>
+          <iteration time-net="159286" mem-peak="1001088" mem-real="2097152" mem-final="688720" comp-z-value="1.7812001358054" comp-deviation="2.1324671294343"/>
+          <iteration time-net="154076" mem-peak="1001088" mem-real="2097152" mem-final="688720" comp-z-value="-1.0091218040425" comp-deviation="-1.2081287405377"/>
+          <stats max="15.9286" mean="15.59602" min="15.4076" mode="15.506498238748" rstdev="1.197208043368" stdev="0.18671680588528" sum="77.9801" variance="0.0348631656"/>
+        </variant>
+      </subject>
+      <subject name="replace">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="153609" mem-peak="1001024" mem-real="2097152" mem-final="688656" comp-z-value="0.76476566407779" comp-deviation="1.2174373720854"/>
+          <iteration time-net="155109" mem-peak="1001024" mem-real="2097152" mem-final="688656" comp-z-value="1.3856514056434" comp-deviation="2.2058309952333"/>
+          <iteration time-net="148265" mem-peak="1001024" mem-real="2097152" mem-final="688656" comp-z-value="-1.4472432712068" comp-deviation="-2.3038796426496" reject-count="4"/>
+          <iteration time-net="151581" mem-peak="1001024" mem-real="2097152" mem-final="688656" comp-z-value="-0.074671858518966" comp-deviation="-0.1188708064106"/>
+          <iteration time-net="150243" mem-peak="1001024" mem-real="2097152" mem-final="688656" comp-z-value="-0.62850193999552" comp-deviation="-1.0005179182585"/>
+          <stats max="15.5109" mean="15.17614" min="14.8265" mode="15.165351663405" rstdev="1.5919090373304" stdev="0.24159034417791" sum="75.8807" variance="0.0583658944"/>
+        </variant>
+      </subject>
+      <subject name="update">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="158464" mem-peak="1001504" mem-real="2097152" mem-final="756416" comp-z-value="1.6988386147437" comp-deviation="2.8321942432037"/>
+          <iteration time-net="153732" mem-peak="1001504" mem-real="2097152" mem-final="756416" comp-z-value="-0.14308795591142" comp-deviation="-0.23854701764314"/>
+          <iteration time-net="154510" mem-peak="1001504" mem-real="2097152" mem-final="756416" comp-z-value="0.15974781584886" comp-deviation="0.26632126235239"/>
+          <iteration time-net="150493" mem-peak="1001504" mem-real="2097152" mem-final="756416" comp-z-value="-1.4038656740754" comp-deviation="-2.3404343684215" reject-count="1"/>
+          <iteration time-net="153299" mem-peak="1001504" mem-real="2097152" mem-final="756416" comp-z-value="-0.31163280060577" comp-deviation="-0.51953411949156"/>
+          <stats max="15.8464" mean="15.40996" min="15.0493" mode="15.358156751468" rstdev="1.6671355469696" stdev="0.2569049209338" sum="77.0498" variance="0.0660001384"/>
+        </variant>
+      </subject>
+      <subject name="upsert">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="149169" mem-peak="1001536" mem-real="2097152" mem-final="756448" comp-z-value="-0.56017514422646" comp-deviation="-0.7544759585637"/>
+          <iteration time-net="148574" mem-peak="1001536" mem-real="2097152" mem-final="756448" comp-z-value="-0.85409420138232" comp-deviation="-1.1503429738595"/>
+          <iteration time-net="151356" mem-peak="1001536" mem-real="2097152" mem-final="756448" comp-z-value="0.52016263392457" comp-deviation="0.70058481866629"/>
+          <iteration time-net="153803" mem-peak="1001536" mem-real="2097152" mem-final="756448" comp-z-value="1.7289356303286" comp-deviation="2.3286295017398" reject-count="5"/>
+          <iteration time-net="148613" mem-peak="1001536" mem-real="2097152" mem-final="756448" comp-z-value="-0.83482891864437" comp-deviation="-1.1243953879829" reject-count="3"/>
+          <stats max="15.3803" mean="15.0303" min="14.8574" mode="14.912657534247" rstdev="1.3468572576628" stdev="0.20243668639849" sum="75.1515" variance="0.040980612"/>
+        </variant>
+      </subject>
+      <subject name="delete">
+        <executor name="template">
+          <parameter name="executor" value="template"/>
+        </executor>
+        <variant sleep="1000000" output-time-unit="seconds" output-time-precision="" output-mode="throughput" revs="10000" warmup="1" retry-threshold="3">
+          <parameter-set name="0"/>
+          <iteration time-net="160721" mem-peak="1000992" mem-real="2097152" mem-final="688624" comp-z-value="1.7955013460146" comp-deviation="2.4409241041893"/>
+          <iteration time-net="155259" mem-peak="1000992" mem-real="2097152" mem-final="688624" comp-z-value="-0.76534792073174" comp-deviation="-1.0404649330684"/>
+          <iteration time-net="156170" mem-peak="1000992" mem-real="2097152" mem-final="688624" comp-z-value="-0.33822714409206" comp-deviation="-0.45980850448144"/>
+          <iteration time-net="154774" mem-peak="1000992" mem-real="2097152" mem-final="688624" comp-z-value="-0.99273933310304" comp-deviation="-1.3495959625575"/>
+          <iteration time-net="157533" mem-peak="1000992" mem-real="2097152" mem-final="688624" comp-z-value="0.3008130519122" comp-deviation="0.40894529591806"/>
+          <stats max="16.0721" mean="15.68914" min="15.4774" mode="15.585633072407" rstdev="1.3594665966735" stdev="0.21328861760535" sum="78.4457" variance="0.0454920344"/>
+        </variant>
+      </subject>
+    </benchmark>
+    <result key="time" class="PhpBench\Model\Result\TimeResult"/>
+    <result key="mem" class="PhpBench\Model\Result\MemoryResult"/>
+    <result key="comp" class="PhpBench\Model\Result\ComputedResult"/>
+    <result key="reject" class="PhpBench\Model\Result\RejectionCountResult"/>
+  </suite>
+</phpbench>
