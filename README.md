@@ -6,9 +6,7 @@ Currently, there are two connectors available:
  * [tarantool/client](https://github.com/tarantool-php/client) written in pure PHP 
  * The official [PECL](https://github.com/tarantool/tarantool-php) extension
  
- > *Note*
- >
- > A more detailed explanation of the benchmarks represented in this repository can be found in [this article](https://habr.com/en/company/mailru/blog/480032/).
+*A more detailed explanation of the benchmarks represented in this repository can be found in [this article](https://habr.com/en/company/mailru/blog/480032/).*
 
 
 ## Requirements
