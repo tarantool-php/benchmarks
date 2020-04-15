@@ -1,6 +1,8 @@
 # Benchmarks for Tarantool PHP connectors
 
-This repository contains code to benchmark PHP connectors for [Tarantool](https://www.tarantool.io/).
+[![Telegram](https://img.shields.io/badge/Telegram-join%20chat-blue.svg)](https://t.me/tarantool_php)
+
+This repository contains code to benchmark PHP connectors for [Tarantool](https://www.tarantool.io/en/developers/).
 Currently, there are two connectors available:
 
  * [tarantool/client](https://github.com/tarantool-php/client) written in pure PHP 
